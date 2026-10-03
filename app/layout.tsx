@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Playfair_Display } from 'next/font/google';
+import { Inter, Manrope } from 'next/font/google';
 
 import './globals.css';
 import { Analytics } from '@/components/Analytics';
@@ -13,33 +13,31 @@ import { COMPANY_NAME, IS_CONCEPT, SITE_URL } from '@/content/site';
 import { TWOGIS } from '@/content/twogis';
 
 /**
- * Типографика дизайн-системы (см. design-system/spf-region-stroy/MASTER.md):
- * Inter — весь интерфейс, Playfair Display italic — только крупные акценты
- * (цифра доверия, pull-quote).
+ * Пара шрифтов бренда: Manrope — заголовки (современный grotesk),
+ * Inter — интерфейс и текст. Больше шрифтов на сайте нет.
  */
+const manrope = Manrope({
+  subsets: ['latin', 'cyrillic', 'cyrillic-ext'],
+  display: 'swap',
+  variable: '--font-display',
+  weight: ['500', '600', '700', '800'],
+});
+
 const inter = Inter({
   subsets: ['latin', 'cyrillic', 'cyrillic-ext'],
   display: 'swap',
   variable: '--font-sans',
-  weight: ['400', '500', '600', '700'],
-});
-
-const playfair = Playfair_Display({
-  subsets: ['latin', 'cyrillic'],
-  display: 'swap',
-  variable: '--font-display',
-  weight: ['500'],
-  style: ['italic'],
+  weight: ['400', '500', '600'],
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Окна, двери и фасадные витражи в Астане · СПФ Регион Строй',
+    default: 'Окна, двери и фасадное остекление в Астане — СПФ Регион Строй',
     template: '%s',
   },
   description:
-    'Окна и двери из металлопластика и алюминия, фасадные витражи: производство, установка, ремонт в Астане.',
+    'Окна ПВХ, алюминиевые окна и двери, фасадные витражи, установка и ремонт в Астане. Получите консультацию и предварительный расчет.',
   applicationName: COMPANY_NAME,
   robots: IS_CONCEPT
     ? { index: false, follow: false, nocache: true, googleBot: { index: false, follow: false } }
@@ -49,14 +47,15 @@ export const metadata: Metadata = {
     locale: 'ru_KZ',
     siteName: COMPANY_NAME,
     url: SITE_URL,
-    title: 'Окна, двери и фасадные витражи в Астане · СПФ Регион Строй',
+    title: 'Окна, двери и фасадное остекление в Астане — СПФ Регион Строй',
     description:
-      'Производство, установка и ремонт конструкций из металлопластика и алюминия. Расчёт после замера.',
+      'Подберем решение под ваш объект, подготовим предварительный расчет и поможем организовать замер.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Окна, двери и фасадные витражи в Астане · СПФ Регион Строй',
-    description: 'Производство, установка и ремонт конструкций из металлопластика и алюминия.',
+    title: 'Окна, двери и фасадное остекление в Астане — СПФ Регион Строй',
+    description:
+      'Окна ПВХ, алюминиевые конструкции, фасадные витражи. Установка и ремонт в Астане.',
   },
   alternates: { canonical: '/' },
   other: { '2gis-card': TWOGIS.firmUrl },
@@ -65,16 +64,16 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#FFFFFF',
+  themeColor: '#F7F6F2',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ru" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang="ru" className={`${manrope.variable} ${inter.variable}`}>
       <body className="font-sans">
         <a
           href="#content"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-foreground focus:px-4 focus:py-3 focus:text-background"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-foreground focus:px-4 focus:py-3 focus:text-background"
         >
           Перейти к содержимому
         </a>

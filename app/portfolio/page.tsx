@@ -43,7 +43,7 @@ export default function PortfolioPage() {
             role="note"
             className="mb-8 max-w-[76ch] rounded-[10px] border border-border bg-marker p-4 text-[15px] text-marker-foreground"
           >
-            <MarkerText text={NOTES.addProjectDescription} /> Реальные кейсы и фотографии агент не
+            <MarkerText text={NOTES.caseClarify} /> Реальные кейсы и фотографии агент не
             придумывает: карточки ниже показывают структуру и заполняются материалами компании.
           </div>
           <PortfolioSection cases={visibleCases(IS_CONCEPT)} />
@@ -68,7 +68,7 @@ export default function PortfolioPage() {
           Опишите задачу и приложите фото — менеджер сориентирует по решению и расчёту.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
-          <WaButton context="calculation" placement="service_page" />
+          <WaButton context="calculation" placement="portfolio" />
           <Link href="/#zayavka" className="btn btn--primary">
             Получить расчёт
           </Link>

@@ -30,7 +30,15 @@ export const CATEGORIES = [
   { value: 'facade', label: 'Фасадное остекление', hint: 'Витражи и фасадные конструкции' },
 ] as const;
 
-export const CATEGORY_VALUES = CATEGORIES.map((c) => c.value);
+/** Значения для API: включают алюминиевые конструкции и «другое». */
+export const CATEGORY_VALUES = [
+  'windows',
+  'doors',
+  'aluminium',
+  'facade',
+  'repair',
+  'other',
+];
 
 export const ACCEPTED_IMAGE_TYPES = [
   'image/jpeg',

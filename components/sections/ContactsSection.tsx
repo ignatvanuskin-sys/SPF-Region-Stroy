@@ -59,20 +59,6 @@ export function ContactsSection() {
           </div>
 
           <div>
-            <dt className="text-[14px] text-muted-foreground">Instagram</dt>
-            <dd className="mt-1">
-              <ExternalLink
-                href={CONTACTS.instagram}
-                placement="contacts"
-                event="click_instagram"
-                className="hover:text-primary"
-              >
-                {CONTACTS.instagramHandle}
-              </ExternalLink>
-            </dd>
-          </div>
-
-          <div>
             <dt className="text-[14px] text-muted-foreground">2ГИС</dt>
             <dd className="mt-1">
               <ExternalLink

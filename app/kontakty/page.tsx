@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { BreadcrumbJsonLd } from '@/components/JsonLd';
 import { FaqList } from '@/components/Faq';
-import { LazyLeadForm } from '@/components/LazyBlocks';
+import { LazyQuiz } from '@/components/LazyBlocks';
 import { Section } from '@/components/Section';
 import { ContactsSection } from '@/components/sections/ContactsSection';
 import { FAQ } from '@/content/faq';
@@ -44,7 +44,7 @@ export default function ContactsPage() {
       <Section id="form" alt title="Заявка на расчёт или замер">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.6fr)]">
           <div id="zayavka">
-            <LazyLeadForm />
+            <LazyQuiz />
           </div>
           <div className="card p-5">
             <h3>Другие способы</h3>

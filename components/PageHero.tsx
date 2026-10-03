@@ -34,7 +34,7 @@ export function PageHero({
             <WaButton
               context="service"
               subject={waContextSubject}
-              placement="service_page"
+              placement="section"
               className="sm:min-w-[240px]"
             />
             <Link href="#zayavka" scroll className="btn btn--primary sm:min-w-[180px]">
@@ -42,7 +42,7 @@ export function PageHero({
             </Link>
           </div>
           <div className="mt-3">
-            <WaFallback placement="service_page" />
+            <WaFallback placement="section" />
           </div>
         </div>
 

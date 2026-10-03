@@ -1,63 +1,81 @@
 /**
- * lib/whatsapp.ts — сборка ссылок wa.me (раздел 7).
+ * lib/whatsapp.ts — сборка ссылок wa.me.
  *
- * Всегда добавляем пометку «с сайта», чтобы менеджер видел источник заявки.
- * Тексты — строго из таблицы раздела 7, без самодеятельности.
+ * Правила:
+ *  - в каждом сообщении есть пометка «с сайта», чтобы менеджер видел источник;
+ *  - текст короткий и уже содержит то, что нужно менеджеру;
+ *  - номер берётся из реестра фактов, а не из строки в компоненте.
  */
 
 import { CONTACTS } from '@/content/contacts';
 
-export type WaContext =
-  | 'general'
-  | 'calculation'
-  | 'measurement'
-  | 'service'
-  | 'case';
+export type WaContext = 'general' | 'calculation' | 'measurement' | 'service' | 'case';
 
-/** Номер из wa.me-ссылки F05: https://wa.me/77018936787 */
+/** Номер из ссылки F05: https://wa.me/77018936787 */
 export const WA_NUMBER = CONTACTS.whatsapp.replace('https://wa.me/', '');
 
-export const WA_BASE = `https://wa.me/${WA_NUMBER}`;
-
-export const WA_TEXTS: Record<WaContext, string> = {
+const TEXTS: Record<WaContext, string> = {
   general: 'Здравствуйте! Пишу с сайта СПФ Регион Строй. Хочу получить консультацию.',
   calculation:
-    'Здравствуйте! Пишу с сайта СПФ Регион Строй. Хочу узнать стоимость. Размеры и фото отправлю сообщением.',
+    'Здравствуйте! Пишу с сайта СПФ Регион Строй. Хочу получить расчет. Тип объекта: ____. Услуга: ____. Фото и размеры отправлю сообщением.',
   measurement:
-    'Здравствуйте! Пишу с сайта СПФ Регион Строй. Хочу вызвать замерщика. Адрес объекта: ',
-  service:
-    'Здравствуйте! Пишу с сайта СПФ Регион Строй. Интересует: {название услуги}.',
-  case: 'Здравствуйте! Пишу с сайта СПФ Регион Строй. Хочу похожее решение: {название кейса}.',
+    'Здравствуйте! Пишу с сайта СПФ Регион Строй. Хочу вызвать замерщика. Адрес объекта: ____',
+  service: 'Здравствуйте! Пишу с сайта СПФ Регион Строй. Интересует услуга: ____.',
+  case: 'Здравствуйте! Пишу с сайта СПФ Регион Строй. Хочу похожее решение: ____.',
 };
 
-export interface WaOptions {
-  context?: WaContext;
-  /** Подставляется вместо {название услуги} / {название кейса}. */
+export interface WaLinkParams {
+  context: WaContext;
+  /** Подставить вместо ____ в тексте — например название услуги. */
   subject?: string;
+  /** Тип объекта из квиза. */
+  object?: string;
+  /** Услуга из квиза. */
+  service?: string;
+  /** Есть ли уже приложенные файлы. */
+  hasFiles?: boolean;
 }
 
 /**
- * Возвращает ссылку wa.me с готовым текстом.
- * ВАЖНО: строка прогоняется через encodeURIComponent — не собирайте URL вручную.
+ * Ссылка на WhatsApp с предзаполненным сообщением.
+ *
+ * Для контекста «расчет» сообщение собирается по шаблону из брифа:
+ * «Здравствуйте! Хочу получить расчет по остеклению. Тип объекта: ____.
+ *  Услуга: ____. Фото/размеры: ____»
  */
-export function waLink({ context = 'general', subject }: WaOptions = {}): string {
-  let text = WA_TEXTS[context];
-  if (subject) {
-    text = text
-      .replace('{название услуги}', subject)
-      .replace('{название кейса}', subject);
+export function waLink({
+  context,
+  subject,
+  object,
+  service,
+  hasFiles = false,
+}: WaLinkParams): string {
+  let text: string;
+
+  if (context === 'calculation' && (object || service || hasFiles)) {
+    text = [
+      'Здравствуйте! Хочу получить расчет по остеклению.',
+      `Тип объекта: ${object || '____'}.`,
+      `Услуга: ${service || '____'}.`,
+      `Фото/размеры: ${hasFiles ? 'приложу в чат' : '____'}.`,
+    ].join(' ');
+  } else if (subject) {
+    text = TEXTS[context].replace('____', subject);
+  } else {
+    text = TEXTS[context];
   }
-  // Если subject не передан, плейсхолдеры не должны попасть в сообщение.
-  text = text.replace(/\{(название услуги|название кейса)\}/g, '—');
-  return `${WA_BASE}?text=${encodeURIComponent(text)}`;
+
+  return `${CONTACTS.whatsapp}?text=${encodeURIComponent(text)}`;
 }
 
-export const WA_LINK = waLink({ context: 'general' });
-export const WA_LINK_CALC = waLink({ context: 'calculation' });
-export const WA_LINK_MEASURE = waLink({ context: 'measurement' });
+/** Подпись ссылки-дублёра под кнопкой WhatsApp. */
+export const WA_FALLBACK_LINK_LABEL = 'Нет WhatsApp? Позвонить';
 
+/** Телефон для ссылки tel: */
 export function telLink(): string {
   return CONTACTS.phoneHref;
 }
 
-export const WA_FALLBACK_LINK_LABEL = 'Нет WhatsApp? Позвонить';
+export function mailLink(): string {
+  return CONTACTS.emailHref;
+}

@@ -36,12 +36,20 @@ export const STAGE_LABEL: Record<Stage, string> = {
 };
 
 /** Категории из пути клиента: «Окна», «Двери», «Фасадное остекление». */
-export const LEAD_CATEGORIES = ['windows', 'doors', 'facade', 'repair', 'other'] as const;
+export const LEAD_CATEGORIES = [
+  'windows',
+  'doors',
+  'aluminium',
+  'facade',
+  'repair',
+  'other',
+] as const;
 export type LeadCategory = (typeof LEAD_CATEGORIES)[number];
 
 export const CATEGORY_LABEL: Record<LeadCategory, string> = {
   windows: 'Окна',
   doors: 'Двери',
+  aluminium: 'Алюминиевые конструкции',
   facade: 'Фасадное остекление',
   repair: 'Ремонт окон',
   other: 'Другое',

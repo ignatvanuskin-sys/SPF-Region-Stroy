@@ -44,7 +44,7 @@ export function PortfolioSection({ cases }: { cases: CaseItem[] }) {
             })}
           </div>
           <p className="mt-2 text-[13px] text-muted-foreground">
-            <MarkerText text={NOTES.addObjectPhoto} /> — 3–8 реальных фото, по возможности
+            <MarkerText text={NOTES.casePhotoObject} /> — 3–8 реальных фото, по возможности
             до/после.
           </p>
 

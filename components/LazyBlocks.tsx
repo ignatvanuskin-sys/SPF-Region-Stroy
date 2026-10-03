@@ -3,26 +3,22 @@
 import dynamic from 'next/dynamic';
 
 /**
- * Тяжёлые клиентские блоки подгружаются отдельными чанками, чтобы стартовый
- * JS страницы оставался в пределах лимита ≤ 120 КБ gzip (раздел 17).
- * SSR не отключаем: разметка приходит с сервера, индексируется и не даёт
- * сдвига контента.
+ * Тяжёлые клиентские блоки грузятся отдельными чанками: стартовый JS
+ * страницы должен оставаться в пределах лимита. SSR не отключаем —
+ * разметка приходит с сервера и не даёт сдвига контента.
  */
 
-export const LazyLeadForm = dynamic(
-  () => import('@/components/LeadForm').then((m) => m.LeadForm),
-  {
-    // Заглушка без id: якорь #zayavka стоит на серверной обёртке страницы,
-    // поэтому в разметке никогда нет двух элементов с одним id.
-    loading: () => (
-      <div className="card min-h-[280px] p-5 text-[15px] text-muted-foreground md:p-8" aria-busy="true">
-        Загружаем форму…
-      </div>
-    ),
-  },
-);
+export const LazyQuiz = dynamic(() => import('@/components/Quiz').then((m) => m.Quiz), {
+  // Заглушка без id: якорь #raschet стоит на серверной обёртке страницы,
+  // поэтому двух элементов с одним id в разметке не появляется.
+  loading: () => (
+    <div className="min-h-[360px] border border-border bg-card p-6 text-[15px] text-muted-foreground md:p-9" aria-busy="true">
+      Загружаем форму расчета…
+    </div>
+  ),
+});
 
-export const LazyPortfolioSection = dynamic(
-  () => import('@/components/sections/PortfolioSection').then((m) => m.PortfolioSection),
+export const LazyServicesShowcase = dynamic(
+  () => import('@/components/ServicesShowcase').then((m) => m.ServicesShowcase),
   { loading: () => null },
 );

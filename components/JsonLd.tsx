@@ -28,10 +28,10 @@ export function LocalBusinessJsonLd() {
     },
     geo: {
       '@type': 'GeoCoordinates',
-      latitude: COORDS.lat,
-      longitude: COORDS.lng,
+      latitude: COORDS[1],
+      longitude: COORDS[0],
     },
-    sameAs: [CONTACTS.instagram, TWOGIS.firmUrl],
+    sameAs: [TWOGIS.firmUrl],
   };
 
   return (

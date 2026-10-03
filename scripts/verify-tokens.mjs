@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
- * scripts/verify-tokens.mjs — проверка дизайн-токенов.
+ * scripts/verify-tokens.mjs — проверка визуальной системы.
  *
- * 1. HSL-значения из app/globals.css должны соответствовать эталонной палитре
- *    (design-system/spf-region-stroy/MASTER.md) с допуском ±3 на канал:
- *    токены заданы в HSL, поэтому обратное преобразование даёт округление.
- *    Допуск ловит реальные ошибки, но не шум округления.
- * 2. Все пары «текст на фоне» должны проходить WCAG AA (>= 4.5:1).
+ * 1. HSL-значения из app/globals.css соответствуют эталонной палитре
+ *    (допуск ±3 на канал: токены заданы в HSL, обратное преобразование округляет).
+ * 2. Все пары «текст на фоне» проходят WCAG AA (>= 4.5:1).
+ * 3. Бронза отдельно: она допустима только как деталь, поэтому проверяется,
+ *    что она НЕ используется для обычного текста на светлом фоне.
  *
  * Запуск: node scripts/verify-tokens.mjs
  */
@@ -14,32 +14,29 @@
 import { readFileSync } from 'node:fs';
 
 const CSS = readFileSync('app/globals.css', 'utf8');
-
-/** Допустимое расхождение на канал между HSL и эталонным hex. */
 const CHANNEL_TOLERANCE = 3;
 
-/* ── 1. Ожидаемые значения ───────────────────────────────────── */
+/* ── Эталонная палитра бренда ────────────────────────────────── */
 
 const EXPECTED = {
-  background: '#FFFFFF',
-  foreground: '#0B1B33',
+  background: '#F7F6F2',
+  foreground: '#151719',
   card: '#FFFFFF',
-  'card-foreground': '#0B1B33',
+  'card-foreground': '#151719',
   popover: '#FFFFFF',
-  'popover-foreground': '#0B1B33',
-  primary: '#1E40AF',
+  'popover-foreground': '#151719',
+  primary: '#526F7D',
   'primary-foreground': '#FFFFFF',
-  secondary: '#EFF6FF',
-  'secondary-foreground': '#1E3A8A',
-  muted: '#F1F5F9',
-  'muted-foreground': '#475569',
-  accent: '#EA580C',
-  'accent-foreground': '#0B1B33',
-  destructive: '#DC2626',
+  secondary: '#E9EEF0',
+  muted: '#EFEDE7',
+  'muted-foreground': '#60676B',
+  accent: '#B18A5A',
+  'accent-foreground': '#151719',
+  destructive: '#C0392B',
   'destructive-foreground': '#FFFFFF',
-  border: '#DCE6F5',
-  input: '#DCE6F5',
-  ring: '#1E40AF',
+  border: '#E5E2DA',
+  input: '#E5E2DA',
+  ring: '#526F7D',
   wa: '#0F7B4F',
   'wa-foreground': '#FFFFFF',
   success: '#067647',
@@ -48,7 +45,7 @@ const EXPECTED = {
   'marker-foreground': '#5C4400',
 };
 
-/* ── 2. Утилиты цвета ────────────────────────────────────────── */
+/* ── Утилиты цвета ───────────────────────────────────────────── */
 
 function parseHsl(value) {
   const m = value.trim().match(/^(\d+(?:\.\d+)?)\s+(\d+(?:\.\d+)?)%\s+(\d+(?:\.\d+)?)%$/);
@@ -70,9 +67,7 @@ function hslToHex({ h, s, l }) {
   return `#${to(0)}${to(8)}${to(4)}`;
 }
 
-function hexToRgb(hex) {
-  return [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
-}
+const hexToRgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
 
 function luminance(hex) {
   const lin = (c) => {
@@ -91,17 +86,18 @@ function contrast(a, b) {
   return (hi + 0.05) / (lo + 0.05);
 }
 
-/* ── 3. Читаем токены из CSS ─────────────────────────────────── */
+/* ── Читаем токены ───────────────────────────────────────────── */
 
 const declared = {};
-// Формат значения в CSS: "<hue> <saturation>% <lightness>%" — процент только у S и L.
-for (const [, name, h, s, l] of CSS.matchAll(/--([a-z-]+):\s*([0-9.]+)\s+([0-9.]+)%\s+([0-9.]+)%;/g)) {
+for (const [, name, h, s, l] of CSS.matchAll(
+  /--([a-z-]+):\s*([0-9.]+)\s+([0-9.]+)%\s+([0-9.]+)%;/g,
+)) {
   declared[name] = `${h} ${s}% ${l}%`;
 }
 
 let problems = 0;
 
-console.log('\n[verify-tokens] 1. HSL в globals.css ↔ эталонная палитра (±3 на канал)\n');
+console.log('\n[verify-tokens] 1. HSL в globals.css ↔ палитра бренда (±3 на канал)\n');
 for (const [name, expectedHex] of Object.entries(EXPECTED)) {
   const raw = declared[name];
   if (!raw) {
@@ -120,21 +116,23 @@ for (const [name, expectedHex] of Object.entries(EXPECTED)) {
   );
 }
 
-/* ── 4. Пары «текст на фоне» ─────────────────────────────────── */
+/* ── Контраст ────────────────────────────────────────────────── */
 
 const PAIRS = [
   ['foreground', 'background', 'основной текст'],
+  ['foreground', 'card', 'текст на карточке'],
   ['muted-foreground', 'background', 'вторичный текст'],
+  ['muted-foreground', 'card', 'вторичный текст на карточке'],
+  ['muted-foreground', 'secondary', 'вторичный текст на светлом блоке'],
   ['muted-foreground', 'muted', 'вторичный текст на muted'],
-  ['muted-foreground', 'secondary', 'вторичный текст на secondary'],
-  ['primary-foreground', 'primary', 'текст на primary-кнопке'],
-  ['secondary-foreground', 'secondary', 'текст на secondary'],
-  ['accent-foreground', 'accent', 'текст на акценте'],
+  ['primary-foreground', 'primary', 'текст на кнопке бренда'],
+  ['primary', 'background', 'ссылка/акцент на фоне'],
+  ['secondary-foreground', 'secondary', 'текст на светлом блоке'],
+  ['accent-foreground', 'accent', 'текст на бронзовой плашке'],
   ['destructive-foreground', 'destructive', 'текст на ошибке'],
-  ['wa-foreground', 'wa', 'текст на WhatsApp-кнопке'],
+  ['wa-foreground', 'wa', 'текст на WhatsApp'],
   ['success-foreground', 'success', 'текст на успехе'],
   ['marker-foreground', 'marker', 'текст маркера'],
-  ['primary', 'background', 'ссылка primary на фоне'],
 ];
 
 console.log('\n[verify-tokens] 2. Контраст пар (WCAG AA, минимум 4.5:1)\n');
@@ -145,7 +143,21 @@ for (const [fg, bg, label] of PAIRS) {
   const ok = ratio >= 4.5;
   if (!ok) problems += 1;
   console.log(
-    `  ${ok ? 'OK  ' : 'FAIL'} ${label.padEnd(28)} ${ratio.toFixed(2)}:1   ${fg} на ${bg}`,
+    `  ${ok ? 'OK  ' : 'FAIL'} ${label.padEnd(30)} ${ratio.toFixed(2)}:1   ${fg} на ${bg}`,
+  );
+}
+
+/* ── Бронза как деталь ───────────────────────────────────────── */
+
+console.log('\n[verify-tokens] 3. Бронза — только деталь, не текст\n');
+const accent = hslToHex(parseHsl(declared.accent));
+for (const bg of ['background', 'card', 'secondary']) {
+  const ratio = contrast(accent, hslToHex(parseHsl(declared[bg])));
+  const ok = ratio < 4.5;
+  if (!ok) problems += 1;
+  console.log(
+    `  ${ok ? 'OK  ' : 'FAIL'} бронза на --${bg.padEnd(12)} ${ratio.toFixed(2)}:1 ` +
+      (ok ? '— для текста не годится, используется как линия/деталь' : '— неожиданно высокая: проверьте применение'),
   );
 }
 
@@ -154,4 +166,4 @@ if (problems > 0) {
   console.error(`[verify-tokens] проблем: ${problems}\n`);
   process.exit(1);
 }
-console.log('[verify-tokens] все токены совпадают, контраст в норме\n');
+console.log('[verify-tokens] палитра совпадает, контраст в норме, бронза — деталь\n');

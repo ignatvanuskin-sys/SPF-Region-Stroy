@@ -1,164 +1,152 @@
 import Link from 'next/link';
-import { BadgeCheck, Clock, MapPin, Star } from 'lucide-react';
+import { ArrowRight, MapPin, MessageCircle, Phone, Star } from 'lucide-react';
 
-import { NOTES } from '@/content/notes';
-import { MEDIA } from '@/content/media';
-import { TWOGIS } from '@/content/twogis';
-import { PhotoSlot } from '@/components/PhotoSlot';
-import { MarkerText } from '@/components/MarkerText';
-import { CategoryPicker } from '@/components/CategoryPicker';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { waLink, telLink } from '@/lib/whatsapp';
 import { CONTACTS } from '@/content/contacts';
+import { TWOGIS } from '@/content/twogis';
+import { NOTES } from '@/content/notes';
+import { MarkerText } from '@/components/MarkerText';
+import { ArchHero } from '@/components/illustrations/ArchHero';
+import { Button } from '@/components/ui/button';
+import { waLink, telLink } from '@/lib/whatsapp';
 
 /**
- * Hero. Паттерн «Trust & Authority + Conversion»:
- * слева — доверие и крупный заголовок, справа — первый шаг воронки
- * (выбор «Окна / Двери / Фасадное остекление»), как в реальном пути клиента из 2ГИС.
+ * Первый экран (раздел 1 брифа).
+ *
+ * За 5 секунд должно быть понятно: что делает компания, в каком городе,
+ * для каких объектов и что сделать дальше. Поэтому: город в надзаголовке,
+ * крупный H1, короткое пояснение, один главный CTA и телефон рядом,
+ * а метрики 2ГИС — сразу под кнопками, до формы.
+ *
+ * Композиция асимметричная: узкая текстовая колонка и широкий визуал.
  */
 export function Hero() {
   return (
-    <section className="relative overflow-hidden border-b border-border">
-      {/* Тонкая сетка-фон: линиями, без градиентов и теней */}
-      <div
-        className="grid-lines pointer-events-none absolute inset-0 opacity-[0.55] [mask-image:linear-gradient(to_bottom,black,transparent_70%)]"
-        aria-hidden="true"
-      />
-
-      <div className="shell relative grid gap-10 py-10 md:py-16 lg:grid-cols-[1.02fr_0.98fr] lg:items-start lg:gap-16">
-        <div>
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="secondary" className="gap-1.5">
-              <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
-              Астана · проспект Республики, 56/2а
-            </Badge>
-            <Badge variant="outline" className="gap-1.5">
-              <BadgeCheck className="h-3.5 w-3.5 text-success" aria-hidden="true" />
-              Производство · установка · ремонт
-            </Badge>
-          </div>
-
-          <h1 className="mt-6">
-            Окна, двери и фасадные витражи{' '}
-            <span className="font-display italic text-primary">в Астане</span>
-          </h1>
-
-          <p className="mt-5 max-w-[58ch] text-[17px] text-muted-foreground md:text-[18px]">
-            Конструкции из металлопластика и алюминия. Поможем подобрать решение, посчитаем
-            стоимость и подготовим заказ после замера.
+    <section className="relative border-b border-border">
+      <div className="shell grid min-w-0 gap-10 pb-12 pt-10 md:gap-12 md:pb-16 md:pt-14 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:items-center lg:gap-14">
+        {/* ── Текстовая колонка ───────────────────────────────── */}
+        <div className="min-w-0">
+          <p className="eyebrow">
+            <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
+            Астана · Казахстан
           </p>
 
-          <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <Button asChild variant="wa" size="lg" className="sm:min-w-[230px]">
+          <h1 className="mt-5">
+            Окна, двери и фасадные витражи{' '}
+            <span className="relative whitespace-nowrap">
+              в Астане
+              <span
+                className="absolute inset-x-0 -bottom-1 h-[3px] bg-accent/60"
+                aria-hidden="true"
+              />
+            </span>
+          </h1>
+
+          <p className="mt-6 max-w-[46ch] text-[17px] text-muted-foreground md:text-[19px]">
+            Подберем решение под ваш объект, подготовим предварительный расчет и поможем
+            организовать замер.
+          </p>
+
+          {/* Главный CTA и связь */}
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <Button asChild size="lg" className="h-auto max-w-full whitespace-normal py-3 text-center leading-snug sm:h-14 sm:whitespace-nowrap sm:py-0">
+              <Link href="#raschet" scroll>
+                Получить расчет и вызвать замерщика
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </Button>
+          </div>
+
+          <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <Button asChild variant="wa" size="lg" className="max-w-full sm:min-w-[210px]">
               <a
-                href={waLink({ context: 'general' })}
+                href={waLink({ context: 'calculation' })}
                 target="_blank"
                 rel="noopener noreferrer"
+                data-analytics="click_whatsapp"
+                data-placement="hero"
               >
+                <MessageCircle className="h-[18px] w-[18px]" aria-hidden="true" />
                 Написать в WhatsApp
               </a>
             </Button>
-            <Button asChild variant="outline" size="lg" className="sm:min-w-[180px]">
-              <a href={telLink()}>
+            <Button asChild variant="outline" size="lg" className="max-w-full sm:min-w-[190px]">
+              <a href={telLink()} data-analytics="click_phone" data-placement="hero">
+                <Phone className="h-[18px] w-[18px]" aria-hidden="true" />
                 <span className="tnum">{CONTACTS.phone}</span>
               </a>
             </Button>
           </div>
 
-          {/* Строка доверия: данные 2ГИС всегда с датой */}
-          <dl className="mt-8 grid max-w-lg grid-cols-3 gap-4 border-t border-border pt-6">
+          {/* Доверие до формы: данные 2ГИС с датой сверки */}
+          <dl className="mt-9 grid max-w-md grid-cols-3 gap-5 border-t border-border pt-6">
             <div>
-              <dd className="flex items-baseline gap-1">
-                <span className="tnum font-display text-[30px] italic leading-none">
+              <dd className="flex items-baseline gap-1.5">
+                <span className="tnum font-display text-[32px] font-bold leading-none">
                   {TWOGIS.rating}
                 </span>
                 <Star className="h-4 w-4 fill-accent text-accent" aria-hidden="true" />
               </dd>
-              <dt className="mt-1 text-[13px] text-muted-foreground">Рейтинг в 2ГИС</dt>
+              <dt className="mt-1.5 text-[13px] text-muted-foreground">Рейтинг 2ГИС</dt>
             </div>
             <div>
-              <dd className="tnum text-[30px] font-semibold leading-none">{TWOGIS.reviewsCount}</dd>
-              <dt className="mt-1 text-[13px] text-muted-foreground">Отзыва</dt>
+              <dd className="tnum font-display text-[32px] font-bold leading-none">
+                {TWOGIS.ratingsCount}
+              </dd>
+              <dt className="mt-1.5 text-[13px] text-muted-foreground">Оценок</dt>
             </div>
             <div>
-              <dd className="tnum text-[30px] font-semibold leading-none">{TWOGIS.photosCount}</dd>
-              <dt className="mt-1 text-[13px] text-muted-foreground">Фото работ</dt>
+              <dd className="tnum font-display text-[32px] font-bold leading-none">
+                {TWOGIS.reviewsCount}
+              </dd>
+              <dt className="mt-1.5 text-[13px] text-muted-foreground">Отзыва</dt>
             </div>
           </dl>
-          <p className="mt-2 text-[12px] text-muted-foreground">{TWOGIS.asOfLabel}</p>
+          <p className="mt-2.5 text-[12px] text-muted-foreground">
+            {TWOGIS.attribution} Сверено {TWOGIS.asOfHuman}.
+          </p>
+
+          <p className="mt-4 text-[14px] text-muted-foreground">
+            <MarkerText text={NOTES.responseTime} />
+          </p>
         </div>
 
-        <div className="lg:pt-4">
-          <div className="rounded-lg border border-border bg-card p-5 md:p-6">
-            <div className="flex items-center gap-2">
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-accent text-[13px] font-bold text-accent-foreground">
-                1
-              </span>
-              <h2 className="text-[19px] font-semibold">Что вам нужно?</h2>
-            </div>
-            <p className="mt-2 text-[15px] text-muted-foreground">
-              Выберите одно — откроем заявку с нужной категорией. Дальше можно приложить фото и
-              выбрать время замера.
-            </p>
-
-            <div className="mt-4">
-              <CategoryPicker />
-            </div>
-
-            <p className="mt-4 flex items-start gap-2 text-[13px] text-muted-foreground">
-              <Clock className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-              <span>
-                Менеджер связывается с заявкой. Срок ответа:{' '}
-                <MarkerText text={NOTES.responseTime} />
-              </span>
-            </p>
-          </div>
-
-          <div className="mt-4 lg:hidden">
-            <PhotoSlot
-              slot={MEDIA.hero}
-              ratio="16:9"
-              priority
-              sizes="(max-width: 1024px) 100vw, 520px"
-            />
-          </div>
-
-          <p className="mt-4 text-[13px] text-muted-foreground">
-            <Link href="/#uslugi" className="underline underline-offset-2 hover:text-primary">
-              Все услуги и цены после замера
-            </Link>
-          </p>
+        {/* ── Визуал ──────────────────────────────────────────── */}
+        <div className="lg:pl-4">
+          <ArchHero />
         </div>
       </div>
     </section>
   );
 }
 
-/** Полоса фактов под hero. Только подтверждённое. */
-export function FactsRow() {
-  const facts = [
-    { title: 'Производство, продажа, установка', note: 'ремонт окон и дверей' },
-    { title: 'Металлопластик и алюминий', note: 'окна, двери, витражи' },
-    { title: 'Розница и опт', note: 'наличный расчёт и по банку' },
-    { title: 'Астана, район Сарыарка', note: 'ориентир — «Астана технопарк»' },
+/**
+ * Полоса направлений под первым экраном.
+ * Показывает охват услуг до того, как человек начнет выбирать.
+ */
+export function DirectionStrip() {
+  const items = [
+    { title: 'Окна ПВХ', note: 'квартиры, дома, помещения' },
+    { title: 'Алюминиевые окна', note: 'большие проёмы, коммерция' },
+    { title: 'Двери', note: 'балкон, тамбур, входные группы' },
+    { title: 'Фасадные витражи', note: 'фасады и перегородки' },
+    { title: 'Ремонт окон', note: 'фурнитура, уплотнения, регулировка' },
   ];
 
   return (
-    <section className="border-b border-border bg-muted/50 py-8">
+    <section className="border-b border-border bg-secondary/60">
       <div className="shell">
-        <h2 className="sr-only">Кратко о компании</h2>
-        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {facts.map((fact) => (
-            <li key={fact.title} className="rounded-lg border border-border bg-background p-4">
-              <p className="text-[15px] font-semibold leading-snug">{fact.title}</p>
-              <p className="mt-1 text-[13px] text-muted-foreground">{fact.note}</p>
+        <h2 className="sr-only">Направления работы</h2>
+        <ul className="scroll-x flex gap-0 py-1">
+          {items.map((item) => (
+            <li
+              key={item.title}
+              className="min-w-[190px] flex-1 border-r border-border px-5 py-5 last:border-r-0 md:min-w-0"
+            >
+              <p className="font-display text-[15px] font-semibold leading-snug">{item.title}</p>
+              <p className="mt-1 text-[13px] text-muted-foreground">{item.note}</p>
             </li>
           ))}
         </ul>
-        <p className="mt-4 text-[12px] text-muted-foreground">
-          <MarkerText text={NOTES.parkingAndDelivery} /> {TWOGIS.asOfLabel}
-        </p>
       </div>
     </section>
   );

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import { CONTACTS } from '@/content/contacts';
-import { COORDS, MAP_EMBED_URL, TWOGIS } from '@/content/twogis';
+import { COORDS, MAP_EMBED_URL, TWOGIS, MAP_ROUTE_URL } from '@/content/twogis';
 import { track } from '@/lib/analytics';
 
 /**
@@ -29,7 +29,7 @@ export function MapLazy() {
             <p className="text-[16px] font-semibold">{CONTACTS.addressLines[0]}</p>
             <p className="text-[15px] text-muted-foreground">{CONTACTS.addressLines[1]}</p>
             <p className="text-[13px] text-muted-foreground tnum">
-              {COORDS.lat}, {COORDS.lng}
+              {COORDS[1]}, {COORDS[0]}
             </p>
             <button type="button" className="btn btn--secondary mt-1" onClick={() => setShown(true)}>
               Показать карту
@@ -52,7 +52,7 @@ export function MapLazy() {
           Открыть в 2ГИС
         </a>
         <a
-          href={TWOGIS.routeUrl}
+          href={MAP_ROUTE_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="btn btn--secondary min-h-[44px] px-4 py-2 text-[15px]"

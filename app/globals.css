@@ -3,55 +3,59 @@
 @tailwind utilities;
 
 /* ═══════════════════════════════════════════════════════════════
-   Design System: СПФ Регион Строй
-   Источник: скилл ui-ux-pro-max (pattern: Trust & Authority + Conversion,
-   style: Minimalism) + контракт токенов shadcn/ui.
-   Значения и проверка контраста — design-system/spf-region-stroy/MASTER.md
+   СПФ Регион Строй — визуальная система
+   Направление: современный архитектурный бренд.
+   Тёплый светлый фон, графитовый текст, стальной акцент, бронза — деталь.
+   Токены в контракте shadcn/ui. Проверка: npm run verify:tokens
    ═══════════════════════════════════════════════════════════════ */
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 216 64% 12%;
+    /* Тёплый светлый фон и графитовый текст */
+    --background: 48 24% 96%; /* #F7F6F2 */
+    --foreground: 210 9% 9%; /* #151719 */
 
     --card: 0 0% 100%;
-    --card-foreground: 216 64% 12%;
+    --card-foreground: 210 9% 9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 216 64% 12%;
+    --popover-foreground: 210 9% 9%;
 
-    --primary: 226 71% 40%;
+    /* Стальной сине-серый акцент — основной цвет бренда */
+    --primary: 200 21% 41%; /* #526F7D */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 214 100% 97%;
-    --secondary-foreground: 224 64% 33%;
+    /* Светлая поверхность блоков */
+    --secondary: 197 19% 93%; /* #E9EEF0 */
+    --secondary-foreground: 200 21% 26%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 19% 35%;
+    --muted: 45 20% 92%; /* #EFEDE7 */
+    --muted-foreground: 202 5% 40%; /* #60676B */
 
-    /* Акцент — только детали малой площади (шаги, eyebrow, бейджи).
-       Для основного текста на белом не используется: 3.4:1 < AA. */
-    --accent: 21 90% 48%;
-    --accent-foreground: 216 64% 12%;
+    /* Бронза: только линии, рамки и детали малой площади.
+       На тёплом фоне даёт 2.9:1 — для обычного текста не годится. */
+    --accent: 33 36% 52%; /* #B18A5A */
+    --accent-foreground: 210 9% 9%;
 
-    --destructive: 0 72% 51%;
+    --destructive: 6 63% 46%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 216 56% 91%;
-    --input: 216 56% 91%;
-    --ring: 226 71% 40%;
+    /* Тонкие тёплые рамки */
+    --border: 44 17% 88%; /* #E5E2DA */
+    --input: 44 17% 88%;
+    --ring: 200 21% 41%;
 
-    /* Бренд WhatsApp — вне палитры shadcn. */
+    /* Вне палитры бренда: узнаваемый зелёный WhatsApp */
     --wa: 156 78% 27%;
     --wa-foreground: 0 0% 100%;
 
     --success: 155 90% 24%;
     --success-foreground: 0 0% 100%;
 
-    /* Маркеры достоверности (только concept) */
+    /* Маркеры достоверности (режим concept) */
     --marker: 47 100% 90%;
     --marker-foreground: 44 100% 18%;
 
-    --radius: 0.625rem;
+    --radius: 0.375rem;
   }
 
   * {
@@ -60,7 +64,6 @@
 
   html {
     scroll-behavior: smooth;
-    /* Якоря не заезжают под липкий хедер */
     scroll-padding-top: 96px;
     -webkit-text-size-adjust: 100%;
   }
@@ -68,41 +71,46 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-size: 17px;
-    line-height: 1.55;
-    font-feature-settings: 'cv11', 'ss01';
+    line-height: 1.6;
     overflow-x: hidden;
   }
 
+  /* Крупная типографика, спокойные пропорции */
   h1,
   h2,
   h3,
   h4 {
-    @apply font-semibold;
-    letter-spacing: -0.025em;
+    @apply font-display;
+    font-weight: 600;
+    letter-spacing: -0.022em;
     text-wrap: balance;
   }
 
   h1 {
-    font-size: clamp(34px, 6.2vw, 62px);
-    line-height: 1.03;
-    letter-spacing: -0.035em;
+    font-size: clamp(31px, 4.8vw, 54px);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
   }
 
   h2 {
-    font-size: clamp(25px, 4vw, 40px);
-    line-height: 1.1;
+    font-size: clamp(24px, 3.6vw, 42px);
+    line-height: 1.08;
+    letter-spacing: -0.026em;
   }
 
   h3 {
-    font-size: clamp(18px, 2.2vw, 21px);
-    line-height: 1.28;
+    font-size: clamp(18px, 2vw, 22px);
+    line-height: 1.25;
   }
 
   p {
     text-wrap: pretty;
   }
 
-  /* Уважаем предпочтения системы (motion tier: Subtle) */
+  ::selection {
+    background: hsl(var(--accent) / 0.28);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
@@ -120,18 +128,72 @@
 }
 
 @layer components {
-  /* ── Контейнер ────────────────────────────────────────────── */
+  /* ── Контейнеры: широкая и узкая колонка для асимметрии ───── */
   .shell {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1240px;
+    margin-inline: auto;
+    padding-inline: 20px;
+  }
+
+  .shell-narrow {
+    width: 100%;
+    max-width: 860px;
     margin-inline: auto;
     padding-inline: 20px;
   }
 
   @media (min-width: 768px) {
-    .shell {
-      padding-inline: 32px;
+    .shell,
+    .shell-narrow {
+      padding-inline: 40px;
     }
+  }
+
+  /* ── Тонкие линии, напоминающие оконные рамы и импосты ────── */
+  .mullion {
+    background-image: linear-gradient(
+      to right,
+      hsl(var(--border)) 1px,
+      transparent 1px
+    );
+    background-size: 25% 100%;
+  }
+
+  .mullion-vertical {
+    background-image: linear-gradient(
+      to bottom,
+      hsl(var(--border)) 1px,
+      transparent 1px
+    );
+    background-size: 100% 88px;
+  }
+
+  /* Бронзовая линия-акцент: «металл» без градиентов */
+  .rule-bronze {
+    height: 1px;
+    background: hsl(var(--accent));
+    opacity: 0.55;
+  }
+
+  /* ── Надзаголовок: ремесленная метка мелким капсом ─────────── */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .eyebrow::before {
+    content: '';
+    width: 28px;
+    height: 1px;
+    background: hsl(var(--accent));
   }
 
   /* ── Появление секций: CSS view-timeline, без JavaScript ──── */
@@ -144,7 +206,18 @@
     .reveal {
       animation: reveal-in linear both;
       animation-timeline: view();
-      animation-range: entry 5% cover 26%;
+      animation-range: entry 4% cover 24%;
+    }
+  }
+
+  @keyframes reveal-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
     }
   }
 
@@ -159,19 +232,22 @@
   /* ── Маркеры достоверности (только concept) ───────────────── */
   .marker {
     display: inline-block;
+    /* Чип не должен выталкивать колонку шире вьюпорта: длинный маркер
+       переносится, а не растягивает строку. */
+    max-width: 100%;
     background: hsl(var(--marker));
     color: hsl(var(--marker-foreground));
     font-family: ui-monospace, SFMono-Regular, monospace;
     font-size: 0.84em;
     line-height: 1.4;
     padding: 1px 6px;
-    border-radius: 4px;
+    border-radius: 3px;
     margin: 0 1px;
     white-space: normal;
     overflow-wrap: anywhere;
   }
 
-  /* ── Липкая мобильная панель действий ─────────────────────── */
+  /* ── Фиксированная мобильная панель ───────────────────────── */
   .action-bar {
     position: fixed;
     left: 0;
@@ -199,7 +275,7 @@
   }
 
   body:has(.action-bar) .site-footer {
-    padding-bottom: 96px;
+    padding-bottom: 92px;
   }
 
   @media (min-width: 1024px) {
@@ -208,24 +284,17 @@
     }
   }
 
-  /* ── Тонкая сетка-фон для hero (без градиентов и теней) ───── */
-  .grid-lines {
-    background-image:
-      linear-gradient(to right, hsl(var(--border)) 1px, transparent 1px),
-      linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px);
-    background-size: 64px 64px;
-  }
-
-  /* ── Числа/цифры ──────────────────────────────────────────── */
+  /* ── Числа ────────────────────────────────────────────────── */
   .tnum {
     font-variant-numeric: tabular-nums;
   }
 
-  /* ── Горизонтальная прокрутка внутри контейнера ───────────── */
+  /* ── Прокрутка внутри блока (таблицы, шкалы дат) ──────────── */
   .scroll-x {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
+    overscroll-behavior-x: contain;
   }
 
   .scroll-x::-webkit-scrollbar {
@@ -235,151 +304,6 @@
   .scroll-x::-webkit-scrollbar-thumb {
     background: hsl(var(--border));
     border-radius: 999px;
-  }
-}
-
-@layer components {
-  /* ═══════════════════════════════════════════════════════════════
-     Переходный слой совместимости.
-     Второстепенные компоненты (каталог услуг, шаги, доверие, контакты)
-     ещё используют старые классы .btn / .card / .chip / .field вместо
-     примитивов shadcn/ui. Здесь они переопределены на новые токены,
-     чтобы интерфейс выглядел целостно.
-     TODO: перевести эти компоненты на <Button/>, <Card/>, <Input/>
-           и удалить блок целиком.
-     ═══════════════════════════════════════════════════════════════ */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    min-height: 48px;
-    padding: 12px 20px;
-    border-radius: 0.5rem;
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 1.2;
-    text-align: center;
-    cursor: pointer;
-    transition:
-      background-color 200ms ease,
-      border-color 200ms ease,
-      color 200ms ease;
-  }
-
-  .btn--primary {
-    background: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
-  }
-
-  .btn--primary:hover {
-    background: hsl(var(--primary) / 0.9);
-  }
-
-  .btn--wa {
-    background: hsl(var(--wa));
-    color: hsl(var(--wa-foreground));
-  }
-
-  .btn--wa:hover {
-    background: hsl(var(--wa) / 0.9);
-  }
-
-  .btn--secondary {
-    border: 1px solid hsl(var(--input));
-    background: hsl(var(--background));
-    color: hsl(var(--foreground));
-  }
-
-  .btn--secondary:hover {
-    border-color: hsl(var(--primary));
-    color: hsl(var(--primary));
-  }
-
-  .btn--ghost {
-    border: 1px solid hsl(var(--border));
-    color: hsl(var(--primary));
-  }
-
-  .btn:disabled,
-  .btn[aria-disabled='true'] {
-    opacity: 0.55;
-    cursor: not-allowed;
-  }
-
-  .card {
-    border: 1px solid hsl(var(--border));
-    border-radius: 0.625rem;
-    background: hsl(var(--card));
-    color: hsl(var(--card-foreground));
-  }
-
-  .card--interactive:hover,
-  .card--interactive:focus-within {
-    border-color: hsl(var(--primary));
-  }
-
-  .chip {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    min-height: 44px;
-    padding: 10px 16px;
-    border: 1px solid hsl(var(--input));
-    border-radius: 999px;
-    background: hsl(var(--background));
-    color: hsl(var(--muted-foreground));
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    transition:
-      border-color 200ms ease,
-      background-color 200ms ease,
-      color 200ms ease;
-  }
-
-  .chip:hover {
-    border-color: hsl(var(--primary));
-  }
-
-  .chip[data-selected='true'] {
-    background: hsl(var(--secondary));
-    border-color: hsl(var(--primary));
-    color: hsl(var(--secondary-foreground));
-  }
-
-  .field {
-    width: 100%;
-    min-height: 48px;
-    border: 1px solid hsl(var(--input));
-    border-radius: 0.5rem;
-    background: hsl(var(--background));
-    color: hsl(var(--foreground));
-    padding: 12px 14px;
-    font-size: 16px;
-    line-height: 1.35;
-  }
-
-  .field:focus {
-    border-color: hsl(var(--primary));
-    outline: none;
-    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.25);
-  }
-
-  .field-label {
-    display: block;
-    font-size: 14px;
-    font-weight: 500;
-    color: hsl(var(--muted-foreground));
-    margin-bottom: 6px;
-  }
-
-  .field-error {
-    display: block;
-    margin-top: 6px;
-    font-size: 14px;
-    color: hsl(var(--destructive));
   }
 }
 

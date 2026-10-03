@@ -108,7 +108,7 @@ export function QuoteButton({
       href={mode === 'measure' ? '/#zayavka' : '/#zayavka'}
       scroll
       className={`${base} btn--primary ${fullWidth ? 'w-full' : ''} ${className}`}
-      onClick={() => track('form_start', { placement: undefined, form: 'quick' })}
+      onClick={() => track('quiz_start', { placement: undefined, form: 'quick' })}
     >
       {label ?? (mode === 'measure' ? 'Вызвать замерщика' : 'Получить расчёт')}
     </Link>
@@ -139,7 +139,7 @@ export function ExternalLink({
   href: string;
   children: React.ReactNode;
   placement: Placement;
-  event: 'click_2gis' | 'click_instagram' | 'click_email' | 'click_map_route' | 'click_whatsapp';
+  event: 'click_2gis'  | 'click_email' | 'click_map_route' | 'click_whatsapp';
   className?: string;
 }) {
   const isMail = event === 'click_email';

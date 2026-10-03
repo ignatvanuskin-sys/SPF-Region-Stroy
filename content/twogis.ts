@@ -1,40 +1,38 @@
 /**
- * content/twogis.ts — ВСЕ значения из карточки 2ГИС лежат здесь и только здесь.
- * Ни одна цифра 2ГИС не должна быть продублирована в текстах страниц.
- * Рейтинг и счётчики подаются только с датой и без анимированных счётчиков.
+ * content/twogis.ts — все значения из публичной карточки 2ГИС.
+ *
+ * Единственное место, где живут эти цифры. Любое упоминание на сайте обязано
+ * идти с датой сверки и подписью «по данным публичной карточки 2ГИС».
+ * Анимированные счётчики запрещены: рейтинг не должен «накручиваться».
  */
 
 export const TWOGIS = {
-  /** Дата сверки данных. Меняется в одном месте. */
+  /** Дата сверки данных. Меняется здесь и только здесь. */
   asOf: '2026-10-03',
   asOfHuman: '03.10.2026',
-  asOfLabel: 'по данным карточки 2ГИС на 03.10.2026',
-  /** Подпись, которую обязательно сопровождает любое упоминание метрик. */
-  attribution: 'Данные публичной карточки компании в 2ГИС на 03.10.2026',
+  asOfLabel: 'по данным публичной карточки 2ГИС на 03.10.2026',
+  /** Подпись, обязательная рядом с любым блоком метрик. */
+  attribution: 'Рейтинг и отзывы указаны по данным публичной карточки 2ГИС.',
 
+  /** Оценки: рейтинг, количество оценок, отзывов, фотографий. */
   rating: 4.9,
   ratingsCount: 46,
   reviewsCount: 43,
   photosCount: 26,
 
+  /** Ссылки на карточку. Адреса заданы вручную — не собираются из шаблонов. */
   firmUrl: 'https://2gis.kz/astana/firm/70000001042561575',
   reviewsUrl: 'https://2gis.kz/astana/firm/70000001042561575/tab/reviews',
-  routeUrl:
-    'https://2gis.kz/astana/directions/points/%7C71.427298%2C51.183311%3B70000001042561575',
-  /** Ссылка на карточку — на фотографии ведём в саму карточку: отдельный
-   *  адрес галереи 2ГИС не подтверждён, придумывать URL запрещено. */
-  photosUrl: 'https://2gis.kz/astana/firm/70000001042561575',
 } as const;
 
-/** Короткая строка доверия под кнопками Hero. */
-export const TRUST_LINE = `${TWOGIS.rating} в 2ГИС · ${TWOGIS.reviewsCount} отзыв${
-  TWOGIS.reviewsCount % 10 === 3 ? '' : 'а'
-}`;
+/** Координаты из карточки 2ГИС: [долгота, широта]. */
+export const COORDS: [number, number] = [71.427298, 51.183311];
 
-/** Полная строка с датой. */
-export const TRUST_LINE_LONG = `4.9 в 2ГИС · ${TWOGIS.ratingsCount} оценок · ${TWOGIS.reviewsCount} отзыва · ${TWOGIS.asOfLabel}`;
+/** Встраиваемая карта без API-ключа. */
+export const MAP_EMBED_URL = `https://2gis.kz/astana/firm/70000001042561575?m=${COORDS[0]}%2C${COORDS[1]}%2F17`;
 
-/** Координаты (F02). */
-export const COORDS = { lat: 51.183311, lng: 71.427298 } as const;
+/** Готовая ссылка на маршрут. */
+export const MAP_ROUTE_URL = `https://2gis.kz/astana/directions/points/%7C${COORDS[0]}%2C${COORDS[1]}%3B70000001042561575`;
 
-export const MAP_EMBED_URL = `https://www.google.com/maps?q=${COORDS.lat},${COORDS.lng}&z=17&output=embed`;
+/** Краткая строка метрик для hero и trust-блока. */
+export const TWOGIS_SHORT = `${TWOGIS.rating} в 2ГИС · ${TWOGIS.ratingsCount} оценок · ${TWOGIS.reviewsCount} отзыва`;

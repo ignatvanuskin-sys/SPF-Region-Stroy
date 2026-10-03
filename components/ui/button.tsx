@@ -9,7 +9,12 @@ import { cn } from '@/lib/utils';
  * Минимальная высота 48px — требование touch-таргета (WCAG 2.5.8 / 44×44).
  */
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-base font-semibold cursor-pointer transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background disabled:pointer-events-none disabled:opacity-55 [&_svg]:pointer-events-none [&_svg]:shrink-0',
+  [
+    'inline-flex items-center justify-center gap-2 rounded-lg text-base font-semibold cursor-pointer text-center transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background disabled:pointer-events-none disabled:opacity-55 [&_svg]:pointer-events-none [&_svg]:shrink-0',
+    // На мобильных длинная подпись переносится, с sm — в одну строку:
+    // иначе «Получить расчет и вызвать замерщика» шире вьюпорта 360px.
+    'whitespace-normal leading-snug sm:whitespace-nowrap',
+  ],
   {
     variants: {
       variant: {
@@ -43,9 +48,11 @@ export interface ButtonProps
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
-    return (
-      <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
-    );
+    // className передаём снаружи cva: внутри cva классы склеиваются через clsx,
+    // который не разрешает конфликты Tailwind. Из-за этого, например,
+    // whitespace-normal не перебивал whitespace-nowrap из базы, и длинная
+    // подпись кнопки растягивала страницу на мобильном.
+    return <Comp className={cn(buttonVariants({ variant, size }), className)} ref={ref} {...props} />;
   },
 );
 Button.displayName = 'Button';
