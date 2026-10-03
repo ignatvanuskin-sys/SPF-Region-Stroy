@@ -48,7 +48,7 @@ export function WaFallback({ placement }: { placement: Placement }) {
   return (
     <a
       href={telLink()}
-      className="mt-2 block text-[14px] text-[color:var(--muted)] underline underline-offset-2"
+      className="mt-2 block text-[14px] text-muted-foreground underline underline-offset-2"
       onClick={() => track('click_phone', { placement })}
     >
       {WA_FALLBACK_LINK_LABEL}
@@ -83,7 +83,7 @@ export function PhoneText({
   return (
     <a
       href={telLink()}
-      className={`inline-flex items-center gap-2 font-semibold text-[color:var(--ink)] hover:text-[color:var(--accent)] ${className}`}
+      className={`inline-flex items-center gap-2 font-semibold text-foreground hover:text-primary ${className}`}
       onClick={() => track('click_phone', { placement })}
     >
       {showIcon && <PhoneIcon />}

@@ -21,7 +21,7 @@ export function LanguageSwitcher({ kkEnabled }: { kkEnabled: boolean }) {
     <Link
       href="/kk"
       hrefLang="kk"
-      className="text-[15px] text-[color:var(--accent)] underline underline-offset-2"
+      className="text-[15px] text-primary underline underline-offset-2"
       onClick={() => track('lang_switch', { to: 'kk' })}
     >
       Қазақша

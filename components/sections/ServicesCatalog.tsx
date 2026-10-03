@@ -15,23 +15,23 @@ export function ServicesCatalog({ items = CATALOG }: { items?: CatalogItem[] }) 
       {items.map((item) => (
         <li key={item.id} className="card flex h-full flex-col p-5">
           <h3>
-            <Link href={item.href} className="hover:text-[color:var(--accent)]">
+            <Link href={item.href} className="hover:text-primary">
               {item.name}
             </Link>
           </h3>
 
-          <p className="mt-3 text-[15px] text-[color:var(--ink-2)]">
+          <p className="mt-3 text-[15px] text-muted-foreground">
             <MarkerText text={item.short} />
           </p>
 
           <dl className="mt-4 space-y-2 text-[14px]">
             <div>
-              <dt className="font-medium text-[color:var(--muted)]">Кому подходит</dt>
-              <dd className="text-[color:var(--ink-2)]">{item.who}</dd>
+              <dt className="font-medium text-muted-foreground">Кому подходит</dt>
+              <dd className="text-muted-foreground">{item.who}</dd>
             </div>
             <div>
-              <dt className="font-medium text-[color:var(--muted)]">Применение</dt>
-              <dd className="text-[color:var(--ink-2)]">
+              <dt className="font-medium text-muted-foreground">Применение</dt>
+              <dd className="text-muted-foreground">
                 <MarkerText text={item.apply} />
               </dd>
             </div>

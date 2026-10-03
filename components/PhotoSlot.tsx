@@ -41,20 +41,20 @@ export function PhotoSlot({
           height={dims.height}
           sizes={sizes}
           priority={priority}
-          className="h-auto w-full rounded-[10px] border border-[color:var(--line)] object-cover"
+          className="h-auto w-full rounded-[10px] border border-border object-cover"
         />
-        {caption && <figcaption className="mt-2 text-[13px] text-[color:var(--muted)]">{slot.alt}</figcaption>}
+        {caption && <figcaption className="mt-2 text-[13px] text-muted-foreground">{slot.alt}</figcaption>}
       </figure>
     );
   }
 
   return (
     <figure className={className}>
-      <div className="rounded-[10px] border border-[color:var(--line)] bg-[color:var(--bg-alt)] p-4 md:p-6">
+      <div className="rounded-[10px] border border-border bg-muted p-4 md:p-6">
         <Illustration ratio={ratio} />
       </div>
       {caption && (
-        <figcaption className="mt-2 text-[13px] text-[color:var(--muted)]">
+        <figcaption className="mt-2 text-[13px] text-muted-foreground">
           {ILLUSTRATION_CAPTION}
         </figcaption>
       )}

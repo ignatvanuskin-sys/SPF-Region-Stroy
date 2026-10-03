@@ -31,7 +31,7 @@ export default function ContactsPage() {
 
       <section className="container-page py-8 md:py-12">
         <h1>Контакты</h1>
-        <p className="mt-4 max-w-[62ch] text-[17px] text-[color:var(--ink-2)]">
+        <p className="mt-4 max-w-[62ch] text-[17px] text-muted-foreground">
           Проспект Республики, 56/2а, Астана. Позвоните, напишите в WhatsApp или оставьте заявку —
           менеджер свяжется с вами.
         </p>
@@ -48,10 +48,10 @@ export default function ContactsPage() {
           </div>
           <div className="card p-5">
             <h3>Другие способы</h3>
-            <p className="mt-3 text-[15px] text-[color:var(--ink-2)]">
+            <p className="mt-3 text-[15px] text-muted-foreground">
               Заявки можно не заполнять: напишите в WhatsApp или позвоните менеджеру.
             </p>
-            <p className="mt-4 text-[14px] text-[color:var(--muted)]">
+            <p className="mt-4 text-[14px] text-muted-foreground">
               Условия выезда, стоимость замера и порядок оплаты уточняются у менеджера.
             </p>
             <div className="mt-4">

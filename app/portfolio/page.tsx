@@ -30,7 +30,7 @@ export default function PortfolioPage() {
 
       <section className="container-page py-8 md:py-12">
         <h1>Портфолио</h1>
-        <p className="mt-4 max-w-[68ch] text-[17px] text-[color:var(--ink-2)]">
+        <p className="mt-4 max-w-[68ch] text-[17px] text-muted-foreground">
           {visible
             ? 'Структура карточки кейса: тип объекта, задача, решение, конструкции, фото, результат.'
             : 'Раздел наполняется после получения фотографий выполненных работ от компании.'}
@@ -41,7 +41,7 @@ export default function PortfolioPage() {
         <Section title="Примеры работ">
           <div
             role="note"
-            className="mb-8 max-w-[76ch] rounded-[10px] border border-[color:var(--line)] bg-[color:var(--marker-bg)] p-4 text-[15px] text-[color:var(--marker-ink)]"
+            className="mb-8 max-w-[76ch] rounded-[10px] border border-border bg-marker p-4 text-[15px] text-marker-foreground"
           >
             <MarkerText text={NOTES.addProjectDescription} /> Реальные кейсы и фотографии агент не
             придумывает: карточки ниже показывают структуру и заполняются материалами компании.
@@ -50,7 +50,7 @@ export default function PortfolioPage() {
         </Section>
       ) : (
         <Section title="Что нужно, чтобы раздел появился">
-          <ul className="max-w-[76ch] space-y-2 text-[16px] text-[color:var(--ink-2)]">
+          <ul className="max-w-[76ch] space-y-2 text-[16px] text-muted-foreground">
             <li>15–30 оригиналов фото готовых работ с разрешением на публикацию.</li>
             <li>Для каждого объекта: тип объекта, что сделано, год.</li>
             <li>По возможности — пары фото «до/после».</li>
@@ -64,7 +64,7 @@ export default function PortfolioPage() {
       )}
 
       <Section alt title="Нужно похожее решение?">
-        <p className="max-w-[68ch] text-[16px] text-[color:var(--ink-2)]">
+        <p className="max-w-[68ch] text-[16px] text-muted-foreground">
           Опишите задачу и приложите фото — менеджер сориентирует по решению и расчёту.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">

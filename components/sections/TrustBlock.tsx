@@ -27,14 +27,14 @@ export function TrustBlock() {
           <p className="tnum text-[32px] font-semibold leading-none">
             {TWOGIS.rating} <span className="text-[16px] font-medium">в 2ГИС</span>
           </p>
-          <p className="tnum text-[15px] text-[color:var(--ink-2)]">
+          <p className="tnum text-[15px] text-muted-foreground">
             {TWOGIS.ratingsCount} оценок · {TWOGIS.reviewsCount} отзыва
           </p>
         </div>
 
-        <p className="mt-2 text-[13px] text-[color:var(--muted)]">{TWOGIS.asOfLabel}</p>
+        <p className="mt-2 text-[13px] text-muted-foreground">{TWOGIS.asOfLabel}</p>
 
-        <p className="mt-4 text-[15px] text-[color:var(--ink-2)]">
+        <p className="mt-4 text-[15px] text-muted-foreground">
           <ExternalLink
             href={TWOGIS.photosUrl}
             placement="contacts"
@@ -47,7 +47,7 @@ export function TrustBlock() {
 
         {/* Режим отзывов (раздел 13). По умолчанию — только ссылка. */}
         {reviewsModeEnabled === 'themes' && (
-          <p className="mt-4 text-[15px] text-[color:var(--ink-2)]">{REVIEW_THEMES_TEXT}</p>
+          <p className="mt-4 text-[15px] text-muted-foreground">{REVIEW_THEMES_TEXT}</p>
         )}
 
         <div className="mt-5">
@@ -61,7 +61,7 @@ export function TrustBlock() {
           </ExternalLink>
         </div>
 
-        <p className="mt-4 text-[13px] text-[color:var(--muted)]">{REVIEWS_NOTE}</p>
+        <p className="mt-4 text-[13px] text-muted-foreground">{REVIEWS_NOTE}</p>
       </div>
 
       <div className="card p-5 md:p-6">
@@ -69,8 +69,8 @@ export function TrustBlock() {
         <dl className="mt-4 space-y-3 text-[15px]">
           {contacts.map((row) => (
             <div key={row.label} className="grid grid-cols-[110px_1fr] gap-3">
-              <dt className="text-[color:var(--muted)]">{row.label}</dt>
-              <dd className="text-[color:var(--ink-2)]">
+              <dt className="text-muted-foreground">{row.label}</dt>
+              <dd className="text-muted-foreground">
                 {row.href ? (
                   <ExternalLink
                     href={row.href}
@@ -82,7 +82,7 @@ export function TrustBlock() {
                           ? 'click_email'
                           : 'click_2gis'
                     }
-                    className="hover:text-[color:var(--accent)]"
+                    className="hover:text-primary"
                   >
                     {row.value}
                   </ExternalLink>
@@ -94,8 +94,8 @@ export function TrustBlock() {
           ))}
         </dl>
 
-        <p className="mt-5 text-[14px] text-[color:var(--ink-2)]">{CONTACTS.scheduleFallback}</p>
-        <p className="mt-2 text-[14px] text-[color:var(--muted)]">
+        <p className="mt-5 text-[14px] text-muted-foreground">{CONTACTS.scheduleFallback}</p>
+        <p className="mt-2 text-[14px] text-muted-foreground">
           <MarkerText text={CONTACTS.schedule} />
         </p>
       </div>

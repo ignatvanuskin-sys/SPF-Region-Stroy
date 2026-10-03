@@ -15,7 +15,7 @@ export function PortfolioSection({ cases }: { cases: CaseItem[] }) {
     <ul className="grid gap-4 lg:grid-cols-2">
       {cases.map((item) => (
         <li key={item.id} className="card flex h-full flex-col p-5">
-          <p className="text-[14px] font-medium text-[color:var(--muted)]">
+          <p className="text-[14px] font-medium text-muted-foreground">
             <MarkerText text={item.objectType} />
           </p>
           <h3 className="mt-2">
@@ -36,14 +36,14 @@ export function PortfolioSection({ cases }: { cases: CaseItem[] }) {
               return (
                 <div
                   key={i}
-                  className="rounded-[10px] border border-[color:var(--line)] bg-[color:var(--bg-alt)] p-2"
+                  className="rounded-[10px] border border-border bg-muted p-2"
                 >
                   <Illustration ratio="3:2" />
                 </div>
               );
             })}
           </div>
-          <p className="mt-2 text-[13px] text-[color:var(--muted)]">
+          <p className="mt-2 text-[13px] text-muted-foreground">
             <MarkerText text={NOTES.addObjectPhoto} /> — 3–8 реальных фото, по возможности
             до/после.
           </p>
@@ -73,8 +73,8 @@ export function PortfolioSection({ cases }: { cases: CaseItem[] }) {
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-[14px] font-medium text-[color:var(--muted)]">{label}</dt>
-      <dd className="text-[color:var(--ink-2)]">
+      <dt className="text-[14px] font-medium text-muted-foreground">{label}</dt>
+      <dd className="text-muted-foreground">
         <MarkerText text={value} />
       </dd>
     </div>

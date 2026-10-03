@@ -7,7 +7,7 @@ import type { FaqItem } from '@/content/faq';
 /** Аккордеон FAQ на нативном <details> (раздел 16.4). */
 export function FaqList({ items, idPrefix = 'faq' }: { items: FaqItem[]; idPrefix?: string }) {
   return (
-    <div className="border-t border-[color:var(--line)]">
+    <div className="border-t border-border">
       {items.map((item) => (
         <details
           key={item.id}

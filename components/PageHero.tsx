@@ -23,11 +23,11 @@ export function PageHero({
   showIllustration?: boolean;
 }) {
   return (
-    <section className="border-b border-[color:var(--line)] bg-[color:var(--bg)]">
+    <section className="border-b border-border bg-background">
       <div className="container-page grid gap-8 py-8 md:py-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
         <div>
           <h1>{h1}</h1>
-          <p className="mt-4 max-w-[64ch] text-[17px] text-[color:var(--ink-2)] md:text-[18px]">
+          <p className="mt-4 max-w-[64ch] text-[17px] text-muted-foreground md:text-[18px]">
             <MarkerText text={lead} />
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">

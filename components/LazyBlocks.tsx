@@ -15,7 +15,7 @@ export const LazyLeadForm = dynamic(
     // Заглушка без id: якорь #zayavka стоит на серверной обёртке страницы,
     // поэтому в разметке никогда нет двух элементов с одним id.
     loading: () => (
-      <div className="card min-h-[280px] p-5 text-[15px] text-[color:var(--muted)] md:p-8" aria-busy="true">
+      <div className="card min-h-[280px] p-5 text-[15px] text-muted-foreground md:p-8" aria-busy="true">
         Загружаем форму…
       </div>
     ),

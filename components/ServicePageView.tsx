@@ -13,6 +13,18 @@ import { PageHero } from '@/components/PageHero';
 import { Section } from '@/components/Section';
 import { ServicesCatalog } from '@/components/sections/ServicesCatalog';
 import { ProcessSteps } from '@/components/sections/ProcessSteps';
+
+/**
+ * Соответствие страницы услуги категории заявки: форма подставляет её первой.
+ */
+const CATEGORY_BY_SLUG: Record<string, string> = {
+  '/plastikovye-okna': 'windows',
+  '/alyuminievye-okna-i-dveri': 'windows',
+  '/dveri': 'doors',
+  '/fasadnoe-ostekleniye': 'facade',
+  '/ustanovka-i-remont-okon': 'repair',
+};
+
 import { PhotosButton, WaButton } from '@/components/Cta';
 
 /** Метаданные страницы услуги из content/seo.ts (раздел 19.1). */
@@ -52,7 +64,7 @@ export function ServicePageView({ slug }: { slug: string }) {
 
       {/* SEO-текст (раздел 10): уникальный, без усиления ключей */}
       <Section title="Об услуге">
-        <div className="max-w-[76ch] text-[17px] text-[color:var(--ink-2)]">
+        <div className="max-w-[76ch] text-[17px] text-muted-foreground">
           <MarkerText text={page.seoText} />
         </div>
         <div className="mt-6">
@@ -65,10 +77,10 @@ export function ServicePageView({ slug }: { slug: string }) {
         <div className="grid gap-6 md:grid-cols-2">
           <div className="card p-5">
             <h3>Кому подходит</h3>
-            <ul className="mt-3 space-y-2 text-[15px] text-[color:var(--ink-2)]">
+            <ul className="mt-3 space-y-2 text-[15px] text-muted-foreground">
               {page.audience.map((item) => (
                 <li key={item} className="flex gap-2">
-                  <span aria-hidden="true" className="mt-[9px] h-[5px] w-[5px] shrink-0 rounded-full bg-[color:var(--accent)]" />
+                  <span aria-hidden="true" className="mt-[9px] h-[5px] w-[5px] shrink-0 rounded-full bg-primary" />
                   <MarkerText text={item} />
                 </li>
               ))}
@@ -76,10 +88,10 @@ export function ServicePageView({ slug }: { slug: string }) {
           </div>
           <div className="card p-5">
             <h3>Где применяется</h3>
-            <ul className="mt-3 space-y-2 text-[15px] text-[color:var(--ink-2)]">
+            <ul className="mt-3 space-y-2 text-[15px] text-muted-foreground">
               {page.applications.map((item) => (
                 <li key={item} className="flex gap-2">
-                  <span aria-hidden="true" className="mt-[9px] h-[5px] w-[5px] shrink-0 rounded-full bg-[color:var(--accent)]" />
+                  <span aria-hidden="true" className="mt-[9px] h-[5px] w-[5px] shrink-0 rounded-full bg-primary" />
                   <MarkerText text={item} />
                 </li>
               ))}
@@ -91,16 +103,16 @@ export function ServicePageView({ slug }: { slug: string }) {
       {/* 4. Что понадобится для расчёта */}
       <Section title="Что понадобится для расчёта">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.7fr)]">
-          <ul className="space-y-3 text-[16px] text-[color:var(--ink-2)]">
+          <ul className="space-y-3 text-[16px] text-muted-foreground">
             {page.calcNeeds.map((item) => (
               <li key={item} className="flex gap-3">
-                <span aria-hidden="true" className="mt-[10px] h-[6px] w-[6px] shrink-0 rounded-full bg-[color:var(--accent)]" />
+                <span aria-hidden="true" className="mt-[10px] h-[6px] w-[6px] shrink-0 rounded-full bg-primary" />
                 <span>{item}</span>
               </li>
             ))}
           </ul>
           <div className="card flex flex-col justify-between p-5">
-            <p className="text-[15px] text-[color:var(--ink-2)]">
+            <p className="text-[15px] text-muted-foreground">
               Размеры и фото можно просто отправить сообщением — это не заменяет замер, но помогает
               менеджеру сориентироваться.
             </p>
@@ -129,7 +141,7 @@ export function ServicePageView({ slug }: { slug: string }) {
       {/* 7. Форма, соседние услуги, контакты */}
       <Section id="form" alt title="Расчёт">
         <div id="zayavka">
-          <LazyLeadForm initialService={page.name} />
+          <LazyLeadForm initialCategory={CATEGORY_BY_SLUG[page.slug] ?? 'windows'} />
         </div>
       </Section>
 

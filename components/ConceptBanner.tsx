@@ -9,7 +9,7 @@ export function ConceptBanner() {
   return (
     <div
       role="note"
-      className="bg-[color:var(--marker-bg)] px-4 py-2 text-center text-[13px] leading-snug text-[color:var(--marker-ink)]"
+      className="bg-marker px-4 py-2 text-center text-[13px] leading-snug text-marker-foreground"
     >
       {CONCEPT_BANNER_TEXT}
     </div>

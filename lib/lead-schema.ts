@@ -1,7 +1,7 @@
 /**
- * lib/lead-schema.ts — серверная zod-схема заявки (раздел 11.4).
+ * lib/lead-schema.ts — серверная zod-схема заявки.
  *
- * Файл импортируется ТОЛЬКО из app/api/lead/route.ts, чтобы zod не попадал
+ * Импортируется ТОЛЬКО из app/api/lead/route.ts, чтобы zod не попадал
  * в браузерный бандл. Клиентская валидация дублирует правила вручную
  * (components/LeadForm.tsx + lib/validation.ts).
  */
@@ -9,6 +9,7 @@
 import { z } from 'zod';
 
 import {
+  CATEGORY_VALUES,
   CONTACT_WAYS,
   MAX_COMMENT,
   NEEDS,
@@ -22,20 +23,40 @@ const phoneField = z
   .transform((v) => normalizePhone(v))
   .refine((v): v is string => v !== null, { message: 'phone_invalid' });
 
+const optionalTrimmed = (max: number) =>
+  z
+    .string()
+    .max(max)
+    .optional()
+    .transform((v) => (v && v.trim() !== '' ? v.trim() : undefined));
+
 export const leadSchema = z.object({
   mode: z.enum(['quick', 'details']).default('quick'),
-  needs: z.enum(NEEDS, { message: 'needs_invalid' }),
+  /** Первый шаг воронки: что нужно клиенту. */
+  category: z.enum(CATEGORY_VALUES as [string, ...string[]], { message: 'category_invalid' }),
+  /** Совместимость со старой формой: список потребностей. */
+  needs: z.enum(NEEDS, { message: 'needs_invalid' }).optional(),
   objectType: z.enum(OBJECT_TYPES).optional(),
-  service: z.string().max(80).optional(),
-  count: z.string().max(40).optional(),
-  sizes: z.string().max(400).optional(),
-  address: z.string().max(240).optional(),
-  name: z.string().max(80).optional(),
+  service: optionalTrimmed(80),
+  count: optionalTrimmed(40),
+  sizes: optionalTrimmed(400),
+  address: optionalTrimmed(240),
+  name: optionalTrimmed(80),
   phone: phoneField,
+  email: z
+    .string()
+    .max(160)
+    .optional()
+    .transform((v) => (v && v.trim() !== '' ? v.trim() : undefined))
+    .refine((v) => v === undefined || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v), {
+      message: 'email_invalid',
+    }),
   contactWay: z.enum(CONTACT_WAYS).optional(),
-  comment: z.string().max(MAX_COMMENT).optional(),
-  page: z.string().max(200).optional(),
-  utm: z.string().max(600).optional(),
+  comment: optionalTrimmed(MAX_COMMENT),
+  /** Желаемый слот замера (ISO). Проверяется по сетке в lib/pipeline/schedule. */
+  measurementSlot: optionalTrimmed(40),
+  page: optionalTrimmed(200),
+  utm: optionalTrimmed(600),
   consent: z
     .union([z.literal('on'), z.literal('true'), z.literal(true)])
     .transform(() => true),

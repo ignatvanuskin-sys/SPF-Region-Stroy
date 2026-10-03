@@ -12,11 +12,11 @@ export const metadata = {
 export default function NotFound() {
   return (
     <section className="container-page py-16 md:py-24">
-      <p className="text-[14px] font-medium uppercase tracking-[0.08em] text-[color:var(--muted)]">
+      <p className="text-[14px] font-medium uppercase tracking-[0.08em] text-muted-foreground">
         Ошибка 404
       </p>
       <h1 className="mt-3">Страница не найдена</h1>
-      <p className="mt-4 max-w-[60ch] text-[17px] text-[color:var(--ink-2)]">
+      <p className="mt-4 max-w-[60ch] text-[17px] text-muted-foreground">
         Возможно, ссылка устарела. Посмотрите услуги или свяжитесь с менеджером — подскажем, что
         вам нужно.
       </p>

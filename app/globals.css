@@ -2,466 +2,393 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ─────────────────────────────────────────────────────────────
-   Токены дизайна (раздел 16.2 мастер-промпта)
-   ───────────────────────────────────────────────────────────── */
-:root {
-  --bg: #ffffff;
-  --bg-alt: #f6f7f8;
-  --ink: #1f2328;
-  --ink-2: #4a5360;
-  /* В мастер-промпте указан #6B7480, но он даёт 4.41:1 на --bg-alt и 4.13:1
-     на --accent-tint — ниже требуемых 4.5:1 (WCAG AA). Токен затемнён до
-     минимально необходимого значения: 4.95:1 на --bg-alt, 4.63:1 на --accent-tint,
-     5.31:1 на белом. Обоснование — требование AA в том же разделе 16.2. */
-  --muted: #626c7c;
-  --line: #e3e6ea;
-  --accent: #1f5f7a;
-  --accent-hover: #174b61;
-  --accent-tint: #e8f1f5;
-  --wa: #0f7b4f;
-  --wa-hover: #0b6240;
-  --error: #b42318;
-  --success: #067647;
-  /* Только для маркеров достоверности (concept) */
-  --marker-bg: #fff4cc;
-  --marker-ink: #5c4400;
+/* ═══════════════════════════════════════════════════════════════
+   Design System: СПФ Регион Строй
+   Источник: скилл ui-ux-pro-max (pattern: Trust & Authority + Conversion,
+   style: Minimalism) + контракт токенов shadcn/ui.
+   Значения и проверка контраста — design-system/spf-region-stroy/MASTER.md
+   ═══════════════════════════════════════════════════════════════ */
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 216 64% 12%;
 
-  /* Шаг отступов 4/8/12/16/24/32/48/64/96 */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-6: 24px;
-  --space-8: 32px;
-  --space-12: 48px;
-  --space-16: 64px;
-  --space-24: 96px;
+    --card: 0 0% 100%;
+    --card-foreground: 216 64% 12%;
 
-  --header-h: 64px;
-}
+    --popover: 0 0% 100%;
+    --popover-foreground: 216 64% 12%;
 
-/* ─────────────────────────────────────────────────────────────
-   База
-   ───────────────────────────────────────────────────────────── */
-* {
-  min-width: 0;
-}
+    --primary: 226 71% 40%;
+    --primary-foreground: 0 0% 100%;
 
-html {
-  scroll-behavior: smooth;
-  /* Якоря не заезжают под липкий хедер */
-  scroll-padding-top: calc(var(--header-h) + 16px);
-  -webkit-text-size-adjust: 100%;
-}
+    --secondary: 214 100% 97%;
+    --secondary-foreground: 224 64% 33%;
 
-body {
-  background: var(--bg);
-  color: var(--ink);
-  font-size: 17px;
-  line-height: 1.55;
-  font-feature-settings: 'ss01', 'cv11';
-  overflow-x: hidden;
-}
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 19% 35%;
 
-h1,
-h2,
-h3,
-h4 {
-  letter-spacing: -0.02em;
-  text-wrap: balance;
-}
+    /* Акцент — только детали малой площади (шаги, eyebrow, бейджи).
+       Для основного текста на белом не используется: 3.4:1 < AA. */
+    --accent: 21 90% 48%;
+    --accent-foreground: 216 64% 12%;
 
-h1 {
-  font-size: clamp(32px, 6vw, 56px);
-  line-height: 1.08;
-  font-weight: 700;
-}
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
 
-h2 {
-  font-size: clamp(24px, 4vw, 36px);
-  line-height: 1.15;
-  font-weight: 600;
-}
+    --border: 216 56% 91%;
+    --input: 216 56% 91%;
+    --ring: 226 71% 40%;
 
-h3 {
-  font-size: clamp(18px, 2.4vw, 22px);
-  line-height: 1.25;
-  font-weight: 600;
-}
+    /* Бренд WhatsApp — вне палитры shadcn. */
+    --wa: 156 78% 27%;
+    --wa-foreground: 0 0% 100%;
 
-p {
-  text-wrap: pretty;
-}
+    --success: 155 90% 24%;
+    --success-foreground: 0 0% 100%;
 
-.tnum {
-  font-variant-numeric: tabular-nums;
-}
+    /* Маркеры достоверности (только concept) */
+    --marker: 47 100% 90%;
+    --marker-foreground: 44 100% 18%;
 
-/* ─────────────────────────────────────────────────────────────
-   Доступность
-   ───────────────────────────────────────────────────────────── */
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
+    --radius: 0.625rem;
+  }
 
-.skip-link {
-  position: absolute;
-  left: -9999px;
-  top: 0;
-  z-index: 100;
-  background: var(--ink);
-  color: #fff;
-  padding: 12px 16px;
-  border-radius: 0 0 8px 0;
-}
+  * {
+    @apply border-border;
+  }
 
-.skip-link:focus {
-  left: 0;
-}
+  html {
+    scroll-behavior: smooth;
+    /* Якоря не заезжают под липкий хедер */
+    scroll-padding-top: 96px;
+    -webkit-text-size-adjust: 100%;
+  }
 
-/* ─────────────────────────────────────────────────────────────
-   Компоненты
-   ───────────────────────────────────────────────────────────── */
-.container-page {
-  width: 100%;
-  max-width: 1200px;
-  margin-inline: auto;
-  padding-inline: 20px;
-}
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-size: 17px;
+    line-height: 1.55;
+    font-feature-settings: 'cv11', 'ss01';
+    overflow-x: hidden;
+  }
 
-@media (min-width: 768px) {
-  .container-page {
-    padding-inline: 32px;
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-semibold;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  h1 {
+    font-size: clamp(34px, 6.2vw, 62px);
+    line-height: 1.03;
+    letter-spacing: -0.035em;
+  }
+
+  h2 {
+    font-size: clamp(25px, 4vw, 40px);
+    line-height: 1.1;
+  }
+
+  h3 {
+    font-size: clamp(18px, 2.2vw, 21px);
+    line-height: 1.28;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Уважаем предпочтения системы (motion tier: Subtle) */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
-/* Кнопки: высота ≥ 48px, радиус 8px (16.4) */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 48px;
-  padding: 12px 20px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.2;
-  text-align: center;
-  transition:
-    background-color 140ms ease,
-    border-color 140ms ease,
-    color 140ms ease;
-  cursor: pointer;
-}
+@layer components {
+  /* ── Контейнер ────────────────────────────────────────────── */
+  .shell {
+    width: 100%;
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: 20px;
+  }
 
-.btn--primary {
-  background: var(--accent);
-  color: #fff;
-}
+  @media (min-width: 768px) {
+    .shell {
+      padding-inline: 32px;
+    }
+  }
 
-.btn--primary:hover {
-  background: var(--accent-hover);
-}
-
-.btn--wa {
-  background: var(--wa);
-  color: #fff;
-}
-
-.btn--wa:hover {
-  background: var(--wa-hover);
-}
-
-.btn--secondary {
-  background: transparent;
-  color: var(--ink);
-  border: 1px solid var(--line);
-}
-
-.btn--secondary:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.btn--ghost {
-  background: transparent;
-  color: var(--accent);
-  border: 1px solid var(--accent-tint);
-}
-
-.btn--ghost:hover {
-  border-color: var(--accent);
-}
-
-.btn[disabled],
-.btn[aria-disabled='true'] {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* Карточки: рамка 1px, радиус 8–12px, без теней */
-.card {
-  background: var(--bg);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  transition: border-color 140ms ease;
-}
-
-.card--interactive:hover {
-  border-color: var(--accent);
-}
-
-.card--interactive:focus-within {
-  border-color: var(--accent);
-}
-
-/* Поля формы: font-size ≥ 16px, чтобы iOS не масштабировал страницу */
-.field {
-  width: 100%;
-  min-height: 48px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: #fff;
-  color: var(--ink);
-  padding: 12px 14px;
-  font-size: 16px;
-  line-height: 1.35;
-}
-
-.field:focus {
-  border-color: var(--accent);
-  outline: none;
-  box-shadow: 0 0 0 3px var(--accent-tint);
-}
-
-.field[aria-invalid='true'] {
-  border-color: var(--error);
-}
-
-.field-label {
-  display: block;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--ink-2);
-  margin-bottom: 6px;
-}
-
-.field-error {
-  display: block;
-  margin-top: 6px;
-  font-size: 14px;
-  color: var(--error);
-}
-
-/* Чипы выбора */
-.chip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  padding: 10px 16px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: #fff;
-  color: var(--ink-2);
-  font-size: 15px;
-  font-weight: 500;
-  cursor: pointer;
-  transition:
-    border-color 140ms ease,
-    background-color 140ms ease,
-    color 140ms ease;
-}
-
-.chip:hover {
-  border-color: var(--accent);
-}
-
-.chip[aria-pressed='true'],
-.chip[data-selected='true'] {
-  background: var(--accent-tint);
-  border-color: var(--accent);
-  color: var(--accent-hover);
-}
-
-/* Маркер достоверности — виден только в concept */
-.marker {
-  display: inline-block;
-  background: var(--marker-bg);
-  color: var(--marker-ink);
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.86em;
-  line-height: 1.4;
-  padding: 1px 6px;
-  border-radius: 4px;
-  margin: 0 1px;
-  white-space: normal;
-  overflow-wrap: anywhere;
-}
-
-/* Аккордеон FAQ */
-details.faq {
-  border-bottom: 1px solid var(--line);
-}
-
-details.faq > summary {
-  list-style: none;
-  cursor: pointer;
-  padding: 18px 40px 18px 0;
-  position: relative;
-  font-weight: 600;
-  font-size: 17px;
-}
-
-details.faq > summary::-webkit-details-marker {
-  display: none;
-}
-
-details.faq > summary::after {
-  content: '';
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  width: 10px;
-  height: 10px;
-  border-right: 1.5px solid var(--ink-2);
-  border-bottom: 1.5px solid var(--ink-2);
-  transform: translateY(-70%) rotate(45deg);
-  transition: transform 160ms ease;
-}
-
-details.faq[open] > summary::after {
-  transform: translateY(-30%) rotate(225deg);
-}
-
-details.faq .faq-body {
-  padding: 0 0 20px;
-  color: var(--ink-2);
-}
-
-/* ─────────────────────────────────────────────────────────────
-   Появление блоков: сдвиг 8px + fade, один раз (16.5)
-   Реализовано на CSS view-timeline, без JavaScript.
-   По умолчанию блок ВИДЕН — если браузер не поддерживает view-timeline,
-   пользователь просто увидит контент без анимации.
-   ───────────────────────────────────────────────────────────── */
-.reveal {
-  opacity: 1;
-  transform: none;
-}
-
-@supports (animation-timeline: view()) {
+  /* ── Появление секций: CSS view-timeline, без JavaScript ──── */
   .reveal {
-    animation: reveal-in linear both;
-    animation-timeline: view();
-    animation-range: entry 5% cover 28%;
-  }
-}
-
-@keyframes reveal-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
     opacity: 1;
     transform: none;
   }
-}
 
-/* Обрезка линий иллюстраций */
-.ill-line {
-  stroke-dasharray: var(--dash, 600);
-  stroke-dashoffset: var(--dash, 600);
-  animation: draw 600ms ease forwards;
-}
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: reveal-in linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 26%;
+    }
+  }
 
-@keyframes draw {
-  to {
-    stroke-dashoffset: 0;
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1 !important;
+      transform: none !important;
+      animation: none !important;
+    }
+  }
+
+  /* ── Маркеры достоверности (только concept) ───────────────── */
+  .marker {
+    display: inline-block;
+    background: hsl(var(--marker));
+    color: hsl(var(--marker-foreground));
+    font-family: ui-monospace, SFMono-Regular, monospace;
+    font-size: 0.84em;
+    line-height: 1.4;
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin: 0 1px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  /* ── Липкая мобильная панель действий ─────────────────────── */
+  .action-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 40;
+    display: flex;
+    gap: 8px;
+    padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+    background: hsl(var(--background) / 0.94);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid hsl(var(--border));
+    transition: transform 200ms ease;
+  }
+
+  .action-bar[data-hidden='true'] {
+    transform: translateY(120%);
+    pointer-events: none;
+  }
+
+  @media (min-width: 1024px) {
+    .action-bar {
+      display: none;
+    }
+  }
+
+  body:has(.action-bar) .site-footer {
+    padding-bottom: 96px;
+  }
+
+  @media (min-width: 1024px) {
+    body:has(.action-bar) .site-footer {
+      padding-bottom: 0;
+    }
+  }
+
+  /* ── Тонкая сетка-фон для hero (без градиентов и теней) ───── */
+  .grid-lines {
+    background-image:
+      linear-gradient(to right, hsl(var(--border)) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+
+  /* ── Числа/цифры ──────────────────────────────────────────── */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── Горизонтальная прокрутка внутри контейнера ───────────── */
+  .scroll-x {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .scroll-x::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .scroll-x::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 999px;
   }
 }
 
-/* ─────────────────────────────────────────────────────────────
-   Липкая панель действий (17)
-   ───────────────────────────────────────────────────────────── */
-.sticky-bar {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 40;
-  display: flex;
-  gap: 8px;
-  padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(8px);
-  border-top: 1px solid var(--line);
-  transition: transform 180ms ease;
-}
+@layer components {
+  /* ═══════════════════════════════════════════════════════════════
+     Переходный слой совместимости.
+     Второстепенные компоненты (каталог услуг, шаги, доверие, контакты)
+     ещё используют старые классы .btn / .card / .chip / .field вместо
+     примитивов shadcn/ui. Здесь они переопределены на новые токены,
+     чтобы интерфейс выглядел целостно.
+     TODO: перевести эти компоненты на <Button/>, <Card/>, <Input/>
+           и удалить блок целиком.
+     ═══════════════════════════════════════════════════════════════ */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 12px 20px;
+    border-radius: 0.5rem;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+    cursor: pointer;
+    transition:
+      background-color 200ms ease,
+      border-color 200ms ease,
+      color 200ms ease;
+  }
 
-.sticky-bar[hidden],
-.sticky-bar.is-hidden {
-  transform: translateY(110%);
-  pointer-events: none;
-}
+  .btn--primary {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
 
-@media (min-width: 1024px) {
-  .sticky-bar {
-    display: none;
+  .btn--primary:hover {
+    background: hsl(var(--primary) / 0.9);
+  }
+
+  .btn--wa {
+    background: hsl(var(--wa));
+    color: hsl(var(--wa-foreground));
+  }
+
+  .btn--wa:hover {
+    background: hsl(var(--wa) / 0.9);
+  }
+
+  .btn--secondary {
+    border: 1px solid hsl(var(--input));
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+
+  .btn--secondary:hover {
+    border-color: hsl(var(--primary));
+    color: hsl(var(--primary));
+  }
+
+  .btn--ghost {
+    border: 1px solid hsl(var(--border));
+    color: hsl(var(--primary));
+  }
+
+  .btn:disabled,
+  .btn[aria-disabled='true'] {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .card {
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.625rem;
+    background: hsl(var(--card));
+    color: hsl(var(--card-foreground));
+  }
+
+  .card--interactive:hover,
+  .card--interactive:focus-within {
+    border-color: hsl(var(--primary));
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 10px 16px;
+    border: 1px solid hsl(var(--input));
+    border-radius: 999px;
+    background: hsl(var(--background));
+    color: hsl(var(--muted-foreground));
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      border-color 200ms ease,
+      background-color 200ms ease,
+      color 200ms ease;
+  }
+
+  .chip:hover {
+    border-color: hsl(var(--primary));
+  }
+
+  .chip[data-selected='true'] {
+    background: hsl(var(--secondary));
+    border-color: hsl(var(--primary));
+    color: hsl(var(--secondary-foreground));
+  }
+
+  .field {
+    width: 100%;
+    min-height: 48px;
+    border: 1px solid hsl(var(--input));
+    border-radius: 0.5rem;
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    padding: 12px 14px;
+    font-size: 16px;
+    line-height: 1.35;
+  }
+
+  .field:focus {
+    border-color: hsl(var(--primary));
+    outline: none;
+    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.25);
+  }
+
+  .field-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: hsl(var(--muted-foreground));
+    margin-bottom: 6px;
+  }
+
+  .field-error {
+    display: block;
+    margin-top: 6px;
+    font-size: 14px;
+    color: hsl(var(--destructive));
   }
 }
 
-/* Футер не должен уезжать под липкую панель */
-main {
-  display: block;
-}
-
-body:has(.sticky-bar) .site-footer {
-  padding-bottom: 88px;
-}
-
-@media (min-width: 1024px) {
-  body:has(.sticky-bar) .site-footer {
-    padding-bottom: 48px;
-  }
-}
-
-/* Широкие таблицы — горизонтальная прокрутка внутри контейнера */
-.table-scroll {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* ─────────────────────────────────────────────────────────────
-   prefers-reduced-motion: отключаем всё (16.5)
-   ───────────────────────────────────────────────────────────── */
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
   }
 
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
-  }
-
-  .reveal {
-    opacity: 1 !important;
-    transform: none !important;
-    animation: none !important;
-  }
-
-  .ill-line {
-    stroke-dashoffset: 0;
-    animation: none;
+  .text-pretty {
+    text-wrap: pretty;
   }
 }

@@ -25,7 +25,7 @@ export function Section({
   return (
     <section
       id={id}
-      className={`py-16 md:py-24 ${alt ? 'bg-[color:var(--bg-alt)]' : ''} ${className}`}
+      className={`py-16 md:py-24 ${alt ? 'bg-muted' : ''} ${className}`}
       aria-labelledby={title && id ? `${id}-title` : undefined}
     >
       <div className="container-page">
@@ -33,7 +33,7 @@ export function Section({
           <Reveal className="mb-8 md:mb-12">
             {title && <Heading id={id ? `${id}-title` : undefined}>{title}</Heading>}
             {lead && (
-              <div className="mt-4 max-w-[68ch] text-[17px] text-[color:var(--ink-2)]">{lead}</div>
+              <div className="mt-4 max-w-[68ch] text-[17px] text-muted-foreground">{lead}</div>
             )}
           </Reveal>
         )}

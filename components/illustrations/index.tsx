@@ -45,7 +45,7 @@ function Frame({
     >
       <g
         fill="none"
-        stroke="var(--ink)"
+        stroke="hsl(var(--foreground))"
         strokeWidth="1.5"
         strokeLinecap="square"
         vectorEffect="non-scaling-stroke"
@@ -62,8 +62,8 @@ export function WindowSingle({ ratio, className }: IllustrationProps) {
       <rect x="40" y="30" width="130" height="140" />
       <path d="M100 30v140" />
       <path d="M40 100h130" strokeWidth="1" opacity="0.4" />
-      <rect x="200" y="60" width="60" height="80" stroke="var(--accent)" />
-      <path d="M230 60v80" stroke="var(--accent)" strokeWidth="1" opacity="0.5" />
+      <rect x="200" y="60" width="60" height="80" stroke="hsl(var(--primary))" />
+      <path d="M230 60v80" stroke="hsl(var(--primary))" strokeWidth="1" opacity="0.5" />
       <path d="M210 140 240 60" strokeWidth="1" opacity="0.35" />
     </Frame>
   );
@@ -75,8 +75,8 @@ export function WindowDouble({ ratio, className }: IllustrationProps) {
       <rect x="30" y="25" width="240" height="150" />
       <path d="M150 25v150" />
       <path d="M30 75h240" strokeWidth="1" opacity="0.4" />
-      <rect x="60" y="95" width="60" height="60" stroke="var(--accent)" />
-      <rect x="180" y="95" width="60" height="60" stroke="var(--accent)" />
+      <rect x="60" y="95" width="60" height="60" stroke="hsl(var(--primary))" />
+      <rect x="180" y="95" width="60" height="60" stroke="hsl(var(--primary))" />
       <path d="M30 155h240" strokeWidth="1" opacity="0.25" />
     </Frame>
   );
@@ -89,8 +89,8 @@ export function BalconyBlock({ ratio, className }: IllustrationProps) {
       <path d="M95 20v160" />
       <rect x="180" y="20" width="70" height="160" />
       <path d="M180 170h70" strokeWidth="1" opacity="0.3" />
-      <path d="M190 40h50" stroke="var(--accent)" />
-      <path d="M190 65h50" stroke="var(--accent)" />
+      <path d="M190 40h50" stroke="hsl(var(--primary))" />
+      <path d="M190 65h50" stroke="hsl(var(--primary))" />
     </Frame>
   );
 }
@@ -99,8 +99,8 @@ export function DoorGlass({ ratio, className }: IllustrationProps) {
   return (
     <Frame ratio={ratio} className={className} label="Схема двери со стеклом">
       <rect x="90" y="15" width="120" height="170" />
-      <rect x="100" y="25" width="100" height="95" stroke="var(--accent)" />
-      <path d="M150 25v95" stroke="var(--accent)" strokeWidth="1" opacity="0.5" />
+      <rect x="100" y="25" width="100" height="95" stroke="hsl(var(--primary))" />
+      <path d="M150 25v95" stroke="hsl(var(--primary))" strokeWidth="1" opacity="0.5" />
       <path d="M100 130h100" strokeWidth="1" opacity="0.4" />
       <path d="M90 185h120" />
       <circle cx="196" cy="155" r="3" />
@@ -116,7 +116,7 @@ export function FacadeGrid({ ratio, className }: IllustrationProps) {
       <path d="M150 20v160" strokeWidth="1" />
       <path d="M215 20v160" strokeWidth="1" />
       <path d="M20 100h260" strokeWidth="1" />
-      <rect x="85" y="100" width="65" height="80" stroke="var(--accent)" strokeWidth="1.5" />
+      <rect x="85" y="100" width="65" height="80" stroke="hsl(var(--primary))" strokeWidth="1.5" />
     </Frame>
   );
 }
@@ -128,7 +128,7 @@ export function Partition({ ratio, className }: IllustrationProps) {
       <path d="M110 20v160" strokeWidth="1" />
       <path d="M190 20v160" strokeWidth="1" />
       <path d="M30 100h240" strokeWidth="1" opacity="0.3" />
-      <rect x="30" y="20" width="80" height="160" stroke="var(--accent)" strokeWidth="1.5" />
+      <rect x="30" y="20" width="80" height="160" stroke="hsl(var(--primary))" strokeWidth="1.5" />
     </Frame>
   );
 }

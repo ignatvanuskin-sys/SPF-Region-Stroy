@@ -1,84 +1,108 @@
 import Link from 'next/link';
+import { AtSign, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 
 import { COMPANY_NAME, KK_ENABLED } from '@/content/site';
-import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { CONTACTS } from '@/content/contacts';
 import { COMMENT_BIN } from '@/content/facts';
 import { TWOGIS } from '@/content/twogis';
 import { MarkerText } from '@/components/MarkerText';
-import { ExternalLink } from '@/components/Cta';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { telLink } from '@/lib/whatsapp';
 
 export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="site-footer border-t border-[color:var(--line)] bg-[color:var(--bg-alt)] py-12">
-      <div className="container-page grid gap-10 md:grid-cols-3">
-        <div>
+    <footer className="site-footer border-t border-border bg-muted/40">
+      <div className="shell grid gap-10 py-12 md:grid-cols-4">
+        <div className="md:col-span-1">
           <p className="text-[17px] font-semibold">{COMPANY_NAME}</p>
-          <p className="mt-3 text-[15px] text-[color:var(--ink-2)]">
-            {CONTACTS.addressLines.map((line) => (
-              <span key={line} className="block">
-                {line}
-              </span>
-            ))}
+          <p className="mt-3 text-[15px] text-muted-foreground">
+            Окна, двери и фасадные витражи из металлопластика и алюминия. Производство, установка,
+            ремонт.
           </p>
-          <p className="mt-3 text-[14px] text-[color:var(--muted)]">
+          <p className="mt-4 text-[13px] text-muted-foreground">
             <MarkerText text={COMMENT_BIN} />
           </p>
         </div>
 
         <div>
-          <p className="text-[15px] font-semibold">Связаться</p>
+          <p className="text-[15px] font-semibold">Услуги</p>
           <ul className="mt-3 space-y-2 text-[15px]">
-            <li>
+            {[
+              ['/plastikovye-okna', 'Пластиковые окна'],
+              ['/alyuminievye-okna-i-dveri', 'Алюминиевые окна и двери'],
+              ['/dveri', 'Двери'],
+              ['/fasadnoe-ostekleniye', 'Фасадное остекление'],
+              ['/ustanovka-i-remont-okon', 'Установка и ремонт'],
+            ].map(([href, label]) => (
+              <li key={href}>
+                <Link
+                  href={href}
+                  className="text-muted-foreground transition-colors duration-200 hover:text-primary"
+                >
+                  {label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <p className="text-[15px] font-semibold">Контакты</p>
+          <ul className="mt-3 space-y-3 text-[15px]">
+            <li className="flex items-start gap-2.5">
+              <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+              <span className="text-muted-foreground">
+                {CONTACTS.addressLines.map((line) => (
+                  <span key={line} className="block">
+                    {line}
+                  </span>
+                ))}
+              </span>
+            </li>
+            <li className="flex items-center gap-2.5">
+              <Phone className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
               <a
                 href={telLink()}
-                className="tnum text-[color:var(--ink-2)] hover:text-[color:var(--accent)]"
+                className="tnum text-muted-foreground transition-colors duration-200 hover:text-primary"
               >
                 {CONTACTS.phone}
               </a>
             </li>
-            <li>
-              <ExternalLink
+            <li className="flex items-center gap-2.5">
+              <MessageCircle
+                className="h-4 w-4 shrink-0 text-muted-foreground"
+                aria-hidden="true"
+              />
+              <a
                 href={CONTACTS.whatsapp}
-                placement="footer"
-                event="click_whatsapp"
-                className="text-[color:var(--ink-2)] hover:text-[color:var(--accent)]"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground transition-colors duration-200 hover:text-primary"
               >
                 WhatsApp
-              </ExternalLink>
+              </a>
             </li>
-            <li>
-              <ExternalLink
+            <li className="flex items-center gap-2.5">
+              <Mail className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+              <a
                 href={CONTACTS.emailHref}
-                placement="footer"
-                event="click_email"
-                className="text-[color:var(--ink-2)] hover:text-[color:var(--accent)]"
+                className="text-muted-foreground transition-colors duration-200 hover:text-primary"
               >
                 {CONTACTS.email}
-              </ExternalLink>
+              </a>
             </li>
-            <li>
-              <ExternalLink
+            <li className="flex items-center gap-2.5">
+              <AtSign className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+              <a
                 href={CONTACTS.instagram}
-                placement="footer"
-                event="click_instagram"
-                className="text-[color:var(--ink-2)] hover:text-[color:var(--accent)]"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground transition-colors duration-200 hover:text-primary"
               >
-                Instagram {CONTACTS.instagramHandle}
-              </ExternalLink>
-            </li>
-            <li>
-              <ExternalLink
-                href={TWOGIS.firmUrl}
-                placement="footer"
-                event="click_2gis"
-                className="text-[color:var(--ink-2)] hover:text-[color:var(--accent)]"
-              >
-                Карточка компании в 2ГИС
-              </ExternalLink>
+                {CONTACTS.instagramHandle}
+              </a>
             </li>
           </ul>
         </div>
@@ -89,7 +113,7 @@ export function Footer() {
             <li>
               <Link
                 href="/privacy"
-                className="text-[color:var(--ink-2)] hover:text-[color:var(--accent)]"
+                className="text-muted-foreground transition-colors duration-200 hover:text-primary"
               >
                 Политика конфиденциальности
               </Link>
@@ -97,27 +121,40 @@ export function Footer() {
             <li>
               <Link
                 href="/kontakty"
-                className="text-[color:var(--ink-2)] hover:text-[color:var(--accent)]"
+                className="text-muted-foreground transition-colors duration-200 hover:text-primary"
               >
                 Контакты
               </Link>
             </li>
+            <li>
+              <a
+                href={TWOGIS.firmUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground transition-colors duration-200 hover:text-primary"
+              >
+                Карточка в 2ГИС
+              </a>
+            </li>
           </ul>
 
-          <p className="mt-4 text-[15px]">
-            {/* Флаг читается здесь, на сервере, и передаётся пропсом:
-                в клиентском компоненте process.env недоступен. */}
+          <div className="mt-4 text-[15px]">
             <LanguageSwitcher kkEnabled={KK_ENABLED} />
-          </p>
+          </div>
 
-          <p className="mt-6 text-[13px] text-[color:var(--muted)]">{TWOGIS.asOfLabel}</p>
+          <p className="mt-6 text-[12px] text-muted-foreground">{TWOGIS.asOfLabel}</p>
         </div>
       </div>
 
-      <div className="container-page mt-10 border-t border-[color:var(--line)] pt-6">
-        <p className="text-[13px] text-[color:var(--muted)]">
-          © {year} {COMPANY_NAME}. Все права защищены.
-        </p>
+      <div className="border-t border-border">
+        <div className="shell flex flex-wrap items-center justify-between gap-3 py-6">
+          <p className="text-[13px] text-muted-foreground">
+            © {year} {COMPANY_NAME}. Все права защищены.
+          </p>
+          <p className="text-[13px] text-muted-foreground">
+            Сроки и стоимость подтверждаются после замера.
+          </p>
+        </div>
       </div>
     </footer>
   );

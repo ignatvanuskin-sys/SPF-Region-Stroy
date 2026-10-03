@@ -43,7 +43,7 @@ export function ScenarioCards() {
               </span>
               <span className="block">
                 <span className="block text-[17px] font-semibold">{scenario.title}</span>
-                <span className="mt-1 block text-[15px] text-[color:var(--ink-2)]">
+                <span className="mt-1 block text-[15px] text-muted-foreground">
                   <MarkerText text={scenario.text} />
                 </span>
               </span>

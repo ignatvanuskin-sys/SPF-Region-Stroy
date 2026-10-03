@@ -1,23 +1,25 @@
-﻿import type { Metadata } from 'next';
-import { NOTES } from '@/content/notes';
+import type { Metadata } from 'next';
 import Link from 'next/link';
+import { ArrowRight, Camera, ClipboardCheck, MessageCircle } from 'lucide-react';
 
-import { LazyLeadForm, LazyPortfolioSection } from '@/components/LazyBlocks';
+import { LazyLeadForm } from '@/components/LazyBlocks';
 import { Section } from '@/components/Section';
 import { FaqList } from '@/components/Faq';
 import { MarkerText } from '@/components/MarkerText';
-import { WaButton } from '@/components/Cta';
+import { CategoryPicker } from '@/components/CategoryPicker';
+import { Button } from '@/components/ui/button';
 import { Hero, FactsRow } from '@/components/sections/Hero';
-import { ScenarioCards } from '@/components/sections/ScenarioCards';
 import { ServicesCatalog } from '@/components/sections/ServicesCatalog';
 import { ProcessSteps } from '@/components/sections/ProcessSteps';
 import { WhyUs } from '@/components/sections/WhyUs';
 import { TrustBlock } from '@/components/sections/TrustBlock';
 import { ContactsSection } from '@/components/sections/ContactsSection';
+import { PortfolioSection } from '@/components/sections/PortfolioSection';
 import { HOME_FAQ } from '@/content/faq';
 import { visibleCases, portfolioVisible } from '@/content/cases';
 import { PORTFOLIO_ENABLED, IS_CONCEPT } from '@/content/site';
 import { seoFor } from '@/content/seo';
+import { NOTES } from '@/content/notes';
 
 const seo = seoFor('/');
 
@@ -27,146 +29,168 @@ export const metadata: Metadata = {
   alternates: { canonical: '/' },
 };
 
+/** Три шага, которые видит клиент из 2ГИС. */
+const JOURNEY = [
+  {
+    icon: Camera,
+    title: 'Присылаете фото и размеры',
+    text: 'Примерных размеров достаточно, чтобы менеджер сориентировался по решению и стоимости.',
+  },
+  {
+    icon: MessageCircle,
+    title: 'Сразу получаете подтверждение',
+    text: 'Заявке присваивается номер, менеджер видит её в CRM вместе с фотографиями.',
+  },
+  {
+    icon: ClipboardCheck,
+    title: 'Дальше — замер и расчёт',
+    text: 'Выбираете удобное время замера, после выезда получаете предложение.',
+  },
+];
+
 export default function HomePage() {
   const showPortfolio = portfolioVisible(IS_CONCEPT, PORTFOLIO_ENABLED);
   const cases = showPortfolio ? visibleCases(IS_CONCEPT) : [];
 
   return (
     <>
-      {/* 9.1 Hero */}
+      {/* Hero + первый шаг воронки */}
       <Hero />
 
-      {/* 9.2 Полоса фактов */}
+      {/* Полоса фактов */}
       <FactsRow />
 
-      {/* 9.3 Что вам нужно? */}
+      {/* Путь клиента: фото → подтверждение → замер */}
       <Section
-        id="scenario"
+        id="process-korotko"
+        title="Как это работает"
+        lead="Короткий путь без звонков и поездок в офис. Начать можно прямо сейчас."
+      >
+        <ol className="grid gap-4 md:grid-cols-3">
+          {JOURNEY.map((step, i) => (
+            <li
+              key={step.title}
+              className="rounded-lg border border-border bg-card p-5 transition-colors duration-200 hover:border-primary"
+            >
+              <div className="flex items-center gap-3">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent text-accent-foreground">
+                  <step.icon className="h-[18px] w-[18px]" aria-hidden="true" />
+                </span>
+                <span className="text-[13px] font-medium text-muted-foreground">
+                  Шаг {i + 1}
+                </span>
+              </div>
+              <h3 className="mt-3">{step.title}</h3>
+              <p className="mt-2 text-[15px] text-muted-foreground">{step.text}</p>
+            </li>
+          ))}
+        </ol>
+
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Button asChild size="lg">
+            <Link href="#zayavka" scroll>
+              Оставить заявку
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </Button>
+        </div>
+      </Section>
+
+      {/* Выбор категории */}
+      <Section
+        id="vybor"
+        alt
         title="Что вам нужно?"
-        lead="Выберите сценарий — мы подставим услугу в заявку и предложим страницу с деталями."
+        lead="Три направления. Выберите своё — форма подставит категорию сама."
       >
-        <ScenarioCards />
-        <div className="mt-8 flex flex-wrap gap-3">
-          <WaButton context="general" placement="hero" />
-          <Link href="#zayavka" scroll className="btn btn--secondary">
-            Получить расчёт
-          </Link>
-        </div>
-      </Section>
-
-      {/* 9.4 Каталог услуг */}
-      <Section
-        id="uslugi"
-        alt
-        title="Услуги"
-        lead="Окна, двери и фасадные витражи из металлопластика и алюминия. Производство, установка и ремонт."
-      >
-        <ServicesCatalog />
-        <div className="mt-8">
-          <WaButton context="general" placement="service_page" />
-        </div>
-      </Section>
-
-      {/* 9.5 Как проходит работа */}
-      <Section
-        id="process"
-        title="Как проходит работа"
-        lead="Мы не называем сроки и гарантии на сайте: их подтверждает менеджер при согласовании заказа."
-      >
-        <ProcessSteps />
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="#zayavka" scroll className="btn btn--primary">
-            Вызвать замерщика
-          </Link>
-          <WaButton context="measurement" placement="service_page" />
-        </div>
-      </Section>
-
-      {/* 9.6 Форма расчёта */}
-      <Section
-        id="form"
-        alt
-        title="Расчёт стоимости"
-        lead="Заполните короткую заявку. Если знаете размеры — раскройте блок «Добавить размеры и фото»."
-      >
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.8fr)]">
-          <div id="zayavka">
-            <LazyLeadForm />
-          </div>
-          <div className="card p-5 md:p-6">
-            <h3>Что ускорит расчёт</h3>
-            <ul className="mt-3 space-y-2 text-[15px] text-[color:var(--ink-2)]">
-              <li>Адрес объекта и тип: квартира, дом или коммерческое помещение.</li>
-              <li>Примерное количество окон, дверей или конструкций.</li>
-              <li>Размеры проёмов, если их уже измерили.</li>
-              <li>Фото проёмов или текущих конструкций.</li>
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start">
+          <CategoryPicker />
+          <div className="rounded-lg border border-border bg-background p-5">
+            <h3 className="text-[17px]">Что ускорит расчёт</h3>
+            <ul className="mt-3 space-y-2 text-[15px] text-muted-foreground">
+              <li>Тип объекта: квартира, дом или коммерческое помещение.</li>
+              <li>Примерное количество конструкций.</li>
+              <li>Размеры проёмов — если уже измеряли.</li>
+              <li>Фото проёмов или текущих окон.</li>
             </ul>
-            <p className="mt-4 text-[14px] text-[color:var(--muted)]">
-              <MarkerText text="[ПОДТВЕРДИТЬ: менеджер даёт ориентир по фото и размерам]" />
+            <p className="mt-4 text-[13px] text-muted-foreground">
+              <MarkerText text={NOTES.managerPhotoEstimate} />
             </p>
           </div>
         </div>
       </Section>
 
-      {/* 9.7 Почему стоит написать нам */}
+      {/* Каталог услуг */}
       <Section
-        id="why"
-        title="Почему стоит написать нам"
-        lead="Три причины, по которым с нами удобно начать разговор."
+        id="uslugi"
+        title="Услуги"
+        lead="Окна, двери и фасадные витражи из металлопластика и алюминия. Производство, установка и ремонт."
       >
-        <WhyUs />
-        <div className="mt-8">
-          <WaButton context="general" placement="hero" />
+        <ServicesCatalog />
+      </Section>
+
+      {/* Процесс работы */}
+      <Section
+        id="process"
+        alt
+        title="Как проходит работа"
+        lead="Сроки и гарантии не публикуем на сайте: их подтверждает менеджер при согласовании заказа."
+      >
+        <ProcessSteps />
+      </Section>
+
+      {/* Заявка */}
+      <Section
+        id="form"
+        title="Заявка на расчёт или замер"
+        lead="Три коротких шага. Фото можно приложить сразу, время замера — выбрать здесь же."
+      >
+        <div id="zayavka" className="scroll-mt-24">
+          <LazyLeadForm />
         </div>
       </Section>
 
-      {/* 9.8 Портфолио */}
+      {/* Почему мы */}
+      <Section id="why" alt title="Почему стоит написать нам">
+        <WhyUs />
+      </Section>
+
+      {/* Портфолио */}
       {showPortfolio && (
-        <Section
-          id="portfolio"
-          alt
-          title="Портфолио"
-          lead={
-            IS_CONCEPT ? (
-              <>
-                Структура карточки кейса. <MarkerText text="[Добавить фото объекта]" /> Реальные
-                работы появятся после получения фотографий от компании.
-              </>
-            ) : (
-              'Примеры выполненных работ.'
-            )
-          }
-        >
-          <LazyPortfolioSection cases={cases} />
+        <Section id="portfolio" title="Портфолио">
+          <PortfolioSection cases={cases} />
         </Section>
       )}
 
-      {/* 9.9 Доверие и отзывы 2ГИС */}
+      {/* Доверие и отзывы */}
       <Section
         id="reviews"
+        alt
         title="Отзывы и репутация"
-        lead="Мы показываем данные публичной карточки 2ГИС и ссылку на отзывы — без переноса текстов на сайт."
+        lead="Показываем данные публичной карточки 2ГИС и ссылку на отзывы — тексты на сайт не переносим."
       >
         <TrustBlock />
       </Section>
 
-      {/* 9.10 FAQ */}
-      <Section id="faq" alt title="Частые вопросы">
+      {/* FAQ */}
+      <Section id="faq" title="Частые вопросы">
         <FaqList items={HOME_FAQ} />
         <div className="mt-8 flex flex-wrap gap-3">
-          <WaButton context="calculation" placement="service_page" />
-          <Link href="#zayavka" scroll className="btn btn--secondary">
-            Получить расчёт
-          </Link>
+          <Button asChild variant="wa" size="lg">
+            <Link href="/#zayavka" scroll>
+              Написать в WhatsApp
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="lg">
+            <Link href="#zayavka" scroll>
+              Получить расчёт
+            </Link>
+          </Button>
         </div>
       </Section>
 
-      {/* 9.11 Контакты */}
-      <Section
-        id="kontakty-blok"
-        title="Контакты"
-        lead="Проспект Республики, 56/2а, Астана. Свяжитесь удобным способом."
-      >
+      {/* Контакты */}
+      <Section id="kontakty-blok" alt title="Контакты">
         <ContactsSection />
       </Section>
     </>

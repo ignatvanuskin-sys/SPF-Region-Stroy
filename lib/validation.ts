@@ -23,6 +23,15 @@ export const OBJECT_TYPES = [
 
 export const CONTACT_WAYS = ['whatsapp', 'call'] as const;
 
+/** Категории первого шага: клиент из 2ГИС выбирает одно из трёх. */
+export const CATEGORIES = [
+  { value: 'windows', label: 'Окна', hint: 'Квартира, дом или помещение' },
+  { value: 'doors', label: 'Двери', hint: 'Металлопластик или алюминий' },
+  { value: 'facade', label: 'Фасадное остекление', hint: 'Витражи и фасадные конструкции' },
+] as const;
+
+export const CATEGORY_VALUES = CATEGORIES.map((c) => c.value);
+
 export const ACCEPTED_IMAGE_TYPES = [
   'image/jpeg',
   'image/png',

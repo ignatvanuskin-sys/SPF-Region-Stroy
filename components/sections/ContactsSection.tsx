@@ -11,7 +11,7 @@ export function ContactsSection() {
       <div>
         <dl className="space-y-4 text-[16px]">
           <div>
-            <dt className="text-[14px] text-[color:var(--muted)]">Адрес</dt>
+            <dt className="text-[14px] text-muted-foreground">Адрес</dt>
             <dd className="mt-1">
               {CONTACTS.addressLines.map((line) => (
                 <span key={line} className="block">
@@ -22,22 +22,22 @@ export function ContactsSection() {
           </div>
 
           <div>
-            <dt className="text-[14px] text-[color:var(--muted)]">Телефон</dt>
+            <dt className="text-[14px] text-muted-foreground">Телефон</dt>
             <dd className="mt-1">
-              <a href={CONTACTS.phoneHref} className="tnum font-semibold hover:text-[color:var(--accent)]">
+              <a href={CONTACTS.phoneHref} className="tnum font-semibold hover:text-primary">
                 {CONTACTS.phone}
               </a>
             </dd>
           </div>
 
           <div>
-            <dt className="text-[14px] text-[color:var(--muted)]">WhatsApp</dt>
+            <dt className="text-[14px] text-muted-foreground">WhatsApp</dt>
             <dd className="mt-1">
               <ExternalLink
                 href={CONTACTS.whatsapp}
                 placement="contacts"
                 event="click_whatsapp"
-                className="hover:text-[color:var(--accent)]"
+                className="hover:text-primary"
               >
                 Написать в WhatsApp
               </ExternalLink>
@@ -45,13 +45,13 @@ export function ContactsSection() {
           </div>
 
           <div>
-            <dt className="text-[14px] text-[color:var(--muted)]">Email</dt>
+            <dt className="text-[14px] text-muted-foreground">Email</dt>
             <dd className="mt-1">
               <ExternalLink
                 href={CONTACTS.emailHref}
                 placement="contacts"
                 event="click_email"
-                className="hover:text-[color:var(--accent)]"
+                className="hover:text-primary"
               >
                 {CONTACTS.email}
               </ExternalLink>
@@ -59,13 +59,13 @@ export function ContactsSection() {
           </div>
 
           <div>
-            <dt className="text-[14px] text-[color:var(--muted)]">Instagram</dt>
+            <dt className="text-[14px] text-muted-foreground">Instagram</dt>
             <dd className="mt-1">
               <ExternalLink
                 href={CONTACTS.instagram}
                 placement="contacts"
                 event="click_instagram"
-                className="hover:text-[color:var(--accent)]"
+                className="hover:text-primary"
               >
                 {CONTACTS.instagramHandle}
               </ExternalLink>
@@ -73,13 +73,13 @@ export function ContactsSection() {
           </div>
 
           <div>
-            <dt className="text-[14px] text-[color:var(--muted)]">2ГИС</dt>
+            <dt className="text-[14px] text-muted-foreground">2ГИС</dt>
             <dd className="mt-1">
               <ExternalLink
                 href={TWOGIS.firmUrl}
                 placement="contacts"
                 event="click_2gis"
-                className="hover:text-[color:var(--accent)]"
+                className="hover:text-primary"
               >
                 Карточка компании в 2ГИС
               </ExternalLink>
@@ -87,10 +87,10 @@ export function ContactsSection() {
           </div>
 
           <div>
-            <dt className="text-[14px] text-[color:var(--muted)]">График работы</dt>
+            <dt className="text-[14px] text-muted-foreground">График работы</dt>
             <dd className="mt-1">
               {CONTACTS.scheduleFallback}
-              <span className="mt-2 block text-[14px] text-[color:var(--muted)]">
+              <span className="mt-2 block text-[14px] text-muted-foreground">
                 <MarkerText text={CONTACTS.schedule} />
               </span>
             </dd>

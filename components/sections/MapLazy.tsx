@@ -25,16 +25,16 @@ export function MapLazy() {
             className="h-[320px] w-full border-0 md:h-[420px]"
           />
         ) : (
-          <div className="flex h-[220px] flex-col items-center justify-center gap-3 bg-[color:var(--bg-alt)] p-6 text-center md:h-[320px]">
+          <div className="flex h-[220px] flex-col items-center justify-center gap-3 bg-muted p-6 text-center md:h-[320px]">
             <p className="text-[16px] font-semibold">{CONTACTS.addressLines[0]}</p>
-            <p className="text-[15px] text-[color:var(--ink-2)]">{CONTACTS.addressLines[1]}</p>
-            <p className="text-[13px] text-[color:var(--muted)] tnum">
+            <p className="text-[15px] text-muted-foreground">{CONTACTS.addressLines[1]}</p>
+            <p className="text-[13px] text-muted-foreground tnum">
               {COORDS.lat}, {COORDS.lng}
             </p>
             <button type="button" className="btn btn--secondary mt-1" onClick={() => setShown(true)}>
               Показать карту
             </button>
-            <p className="text-[13px] text-[color:var(--muted)]">
+            <p className="text-[13px] text-muted-foreground">
               Карта загружается только по нажатию.
             </p>
           </div>
@@ -62,7 +62,7 @@ export function MapLazy() {
         </a>
       </div>
 
-      <p className="mt-3 text-[13px] text-[color:var(--muted)]">{CONTACTS.landmark}</p>
+      <p className="mt-3 text-[13px] text-muted-foreground">{CONTACTS.landmark}</p>
     </div>
   );
 }

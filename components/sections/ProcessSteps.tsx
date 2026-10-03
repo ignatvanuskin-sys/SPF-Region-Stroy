@@ -9,14 +9,14 @@ export function ProcessSteps() {
         <li key={step.n} className="card p-5">
           <div className="flex items-baseline gap-3">
             <span
-              className="tnum text-[22px] font-semibold text-[color:var(--accent)]"
+              className="tnum text-[22px] font-semibold text-primary"
               aria-hidden="true"
             >
               {String(step.n).padStart(2, '0')}
             </span>
             <h3 className="text-[18px]">{step.title}</h3>
           </div>
-          <p className="mt-3 text-[15px] text-[color:var(--ink-2)]">
+          <p className="mt-3 text-[15px] text-muted-foreground">
             <MarkerText text={step.text} />
           </p>
         </li>

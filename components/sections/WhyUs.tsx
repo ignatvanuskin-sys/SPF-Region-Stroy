@@ -23,7 +23,7 @@ export function WhyUs() {
       {items.map((item) => (
         <li key={item.title} className="card p-5">
           <h3>{item.title}</h3>
-          <p className="mt-3 text-[15px] text-[color:var(--ink-2)]">
+          <p className="mt-3 text-[15px] text-muted-foreground">
             <MarkerText text={item.text} />
           </p>
         </li>

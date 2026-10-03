@@ -30,9 +30,9 @@ export function CookieNotice() {
     <div
       role="region"
       aria-label="Уведомление о cookies"
-      className="fixed bottom-[76px] left-3 right-3 z-40 rounded-[10px] border border-[color:var(--line)] bg-[color:var(--bg)] p-4 shadow-sm lg:bottom-4 lg:left-auto lg:right-4 lg:max-w-[420px]"
+      className="fixed bottom-[76px] left-3 right-3 z-40 rounded-[10px] border border-border bg-background p-4 shadow-sm lg:bottom-4 lg:left-auto lg:right-4 lg:max-w-[420px]"
     >
-      <p className="text-[15px] text-[color:var(--ink-2)]">
+      <p className="text-[15px] text-muted-foreground">
         Мы используем cookies для статистики посещений.
       </p>
       <div className="mt-3 flex flex-wrap gap-2">

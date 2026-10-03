@@ -30,7 +30,7 @@ export default function PrivacyPage() {
         <h1>Политика конфиденциальности</h1>
         <div
           role="note"
-          className="mt-6 max-w-[76ch] rounded-[10px] border border-[color:var(--line)] bg-[color:var(--marker-bg)] p-4 text-[15px] text-[color:var(--marker-ink)]"
+          className="mt-6 max-w-[76ch] rounded-[10px] border border-border bg-marker p-4 text-[15px] text-marker-foreground"
         >
           Каркас документа. Текст подготовлен без юридической экспертизы и требует проверки
           юристом до запуска сайта.
@@ -38,7 +38,7 @@ export default function PrivacyPage() {
       </section>
 
       <Section title="1. Оператор">
-        <div className="max-w-[76ch] space-y-3 text-[16px] text-[color:var(--ink-2)]">
+        <div className="max-w-[76ch] space-y-3 text-[16px] text-muted-foreground">
           <p>
             Оператор персональных данных: {CONTACTS.legalName}, <MarkerText text={COMMENT_BIN} />.
           </p>
@@ -50,7 +50,7 @@ export default function PrivacyPage() {
       </Section>
 
       <Section alt title="2. Какие данные собираются">
-        <ul className="max-w-[76ch] space-y-2 text-[16px] text-[color:var(--ink-2)]">
+        <ul className="max-w-[76ch] space-y-2 text-[16px] text-muted-foreground">
           <li>Имя — если вы его указали.</li>
           <li>Телефон — обязательное поле формы.</li>
           <li>Адрес объекта — если вы его указали.</li>
@@ -65,7 +65,7 @@ export default function PrivacyPage() {
       </Section>
 
       <Section title="3. Зачем обрабатываются данные">
-        <div className="max-w-[76ch] space-y-3 text-[16px] text-[color:var(--ink-2)]">
+        <div className="max-w-[76ch] space-y-3 text-[16px] text-muted-foreground">
           <p>Цели: связаться с вами, подготовить расчёт и организовать замер.</p>
           <p>
             Срок хранения: <MarkerText text="[УТОЧНИТЬ У КОМПАНИИ: срок хранения персональных данных]" />
@@ -74,7 +74,7 @@ export default function PrivacyPage() {
       </Section>
 
       <Section alt title="4. Кому передаются данные">
-        <div className="max-w-[76ch] space-y-3 text-[16px] text-[color:var(--ink-2)]">
+        <div className="max-w-[76ch] space-y-3 text-[16px] text-muted-foreground">
           <p>
             Заявка передаётся сервисам доставки сообщений (мессенджер и/или электронная почта) и не
             сохраняется на сервере сайта: базы данных у сайта нет.
@@ -86,7 +86,7 @@ export default function PrivacyPage() {
       </Section>
 
       <Section title="5. Ваши права">
-        <div className="max-w-[76ch] space-y-3 text-[16px] text-[color:var(--ink-2)]">
+        <div className="max-w-[76ch] space-y-3 text-[16px] text-muted-foreground">
           <p>
             Вы можете обратиться к оператору, чтобы уточнить, изменить или удалить свои данные, а
             также отозвать согласие. Обращения принимаются по адресу {CONTACTS.email} или по
@@ -99,7 +99,7 @@ export default function PrivacyPage() {
       </Section>
 
       <Section alt title="6. Согласие в форме">
-        <p className="max-w-[76ch] text-[16px] text-[color:var(--ink-2)]">
+        <p className="max-w-[76ch] text-[16px] text-muted-foreground">
           Отправляя форму, вы подтверждаете согласие на обработку персональных данных. Чекбокс
           согласия не отмечен заранее и обязателен для отправки.
         </p>

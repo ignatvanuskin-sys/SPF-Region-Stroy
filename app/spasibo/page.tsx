@@ -19,7 +19,7 @@ export default function ThanksPage() {
   return (
     <section className="container-page py-16 md:py-24">
       <h1>Заявка отправлена</h1>
-      <p className="mt-4 max-w-[62ch] text-[17px] text-[color:var(--ink-2)]">
+      <p className="mt-4 max-w-[62ch] text-[17px] text-muted-foreground">
         Менеджер свяжется с вами. <MarkerText text={NOTES.responseTime} /> Если вопрос срочный,
         напишите в WhatsApp или позвоните — так быстрее.
       </p>
@@ -29,7 +29,7 @@ export default function ThanksPage() {
         <CallButton placement="thanks" />
       </div>
 
-      <p className="mt-8 text-[15px] text-[color:var(--muted)]">
+      <p className="mt-8 text-[15px] text-muted-foreground">
         <Link href="/" className="underline">
           Вернуться на главную
         </Link>
