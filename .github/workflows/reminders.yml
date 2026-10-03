@@ -1,0 +1,50 @@
+# Напоминания менеджеру каждые 5 минут.
+#
+# Почему не Vercel Cron: на тарифе Hobby Vercel разрешает cron только раз в сутки.
+# Здесь расписание задаёт GitHub Actions, а эндпоинт тот же — /api/cron/reminders.
+# На тарифе Vercel Pro это расписание можно перенести в vercel.json и удалить workflow.
+#
+# Что нужно настроить в репозитории (Settings → Secrets and variables → Actions):
+#   CRON_SECRET — тот же секрет, что задан в переменных окружения Vercel
+#   SITE_URL    — адрес сайта, например https://spf-region-stroy.vercel.app
+#
+# Если секрет не задан, шаг завершается без ошибки: расписание не должно
+# ломать сборку, пока автоматизация не подключена.
+
+name: Напоминания менеджеру
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: reminders
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Вызвать планировщик
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          SITE_URL: ${{ secrets.SITE_URL }}
+        run: |
+          if [ -z "$CRON_SECRET" ] || [ -z "$SITE_URL" ]; then
+            echo "CRON_SECRET или SITE_URL не заданы — пропускаем."
+            exit 0
+          fi
+
+          status=$(curl -sS -o response.json -w "%{http_code}" \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "$SITE_URL/api/cron/reminders")
+
+          echo "HTTP $status"
+          cat response.json
+          echo
+
+          if [ "$status" -ge 400 ]; then
+            echo "Планировщик вернул ошибку $status"
+            exit 1
+          fi

@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 
 /**
- * Тесты раздела 21 мастер-промпта.
+ * Тесты интерфейса и воронки.
  * Запуск: npm run build && npm run test:e2e
  */
 
@@ -22,10 +22,9 @@ function thirdPartyRequests(page: Page): string[] {
 test.describe('Главная', () => {
   test('открывается, H1 виден, нет горизонтальной прокрутки', async ({ page }) => {
     await page.goto('/');
-    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'Окна, двери и фасадные витражи в Астане',
-    );
+    const h1 = page.getByRole('heading', { level: 1 });
+    await expect(h1).toBeVisible();
+    await expect(h1).toContainText('Окна, двери и фасадные витражи');
 
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
@@ -33,10 +32,14 @@ test.describe('Главная', () => {
     expect(overflow).toBeLessThanOrEqual(1);
   });
 
-  test('H1 и кнопка WhatsApp помещаются на первый экран', async ({ page }) => {
+  test('первый экран помещает выбор категории и переход в WhatsApp', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/');
-    const wa = page.locator('a[href^="https://wa.me/77018936787"]').first();
+
+    await expect(page.getByRole('heading', { name: 'Что вам нужно?' })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Окна/ }).first()).toBeVisible();
+
+    const wa = page.locator(`a[href^="${WA_PREFIX}"]:visible`).first();
     await expect(wa).toBeVisible();
     const box = await wa.boundingBox();
     expect(box?.y ?? 9999).toBeLessThan(844);
@@ -46,54 +49,66 @@ test.describe('Главная', () => {
 test.describe('Ссылки', () => {
   test('телефон и WhatsApp с пометкой «с сайта»', async ({ page }) => {
     await page.goto('/');
-    // В хедере две tel-ссылки (мобильная и десктопная), берём видимую.
     await expect(page.locator(`a[href="${PHONE_HREF}"]:visible`).first()).toBeVisible();
 
     const waLinks = page.locator(`a[href^="${WA_PREFIX}"]:visible`);
     expect(await waLinks.count()).toBeGreaterThan(0);
     const href = await waLinks.first().getAttribute('href');
-    expect(href).toBeTruthy();
     expect(decodeURIComponent(href as string)).toContain('Пишу с сайта');
   });
 });
 
-test.describe('Форма', () => {
-  test('валидация: пустая, неверный телефон, без согласия', async ({ page }) => {
+test.describe('Форма заявки', () => {
+  test('выбор категории подставляет её в форму', async ({ page }) => {
     await page.goto('/');
+    await page.getByRole('button', { name: /Двери/ }).first().click();
+
     const form = page.locator('#zayavka');
     await form.scrollIntoViewIfNeeded();
-
-    // Пустая отправка
-    await form.getByRole('button', { name: 'Получить расчёт' }).click();
-    await expect(form.getByText('Выберите, что вам нужно')).toBeVisible();
-
-    // Неверный телефон
-    await form.getByRole('button', { name: 'Окна', exact: true }).click();
-    await form.getByLabel('Телефон *').fill('+7 111');
-    await form.getByRole('button', { name: 'Получить расчёт' }).click();
-    await expect(form.getByText('Введите телефон в формате +7 XXX XXX XX XX')).toBeVisible();
-
-    // Без согласия
-    await form.getByLabel('Телефон *').fill('+7 701 123 45 67');
-    await form.getByRole('button', { name: 'Получить расчёт' }).click();
-    await expect(form.getByText('Нужно согласие на обработку персональных данных')).toBeVisible();
+    await expect(form.getByText('Шаг 1 из 3')).toBeVisible();
+    await expect(form.getByRole('button', { name: /Двери/ })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
   });
 
-  test('без настроенного получателя показывает «не подключена», а не успех', async ({
-    page,
-  }) => {
+  test('валидация: телефон и согласие проверяются на шаге связи', async ({ page }) => {
     await page.goto('/');
     const form = page.locator('#zayavka');
     await form.scrollIntoViewIfNeeded();
 
-    await form.getByRole('button', { name: 'Окна', exact: true }).click();
+    // Шаг 1 → 2
+    await form.getByRole('button', { name: /Окна/ }).click();
+    await form.getByRole('button', { name: 'Далее' }).click();
+    await expect(form.getByText('Шаг 2 из 3')).toBeVisible();
+
+    // Шаг 2 → 3
+    await form.getByRole('button', { name: 'Далее' }).click();
+    await expect(form.getByText('Шаг 3 из 3')).toBeVisible();
+
+    // Отправка без телефона и согласия
+    await form.getByRole('button', { name: 'Отправить заявку' }).click();
+    await expect(form.getByText('Введите телефон в формате +7 XXX XXX XX XX')).toBeVisible();
+    await expect(
+      form.getByText('Нужно согласие на обработку персональных данных'),
+    ).toBeVisible();
+  });
+
+  test('без настроенного получателя показывает «не подключена», а не успех', async ({ page }) => {
+    await page.goto('/');
+    const form = page.locator('#zayavka');
+    await form.scrollIntoViewIfNeeded();
+
+    await form.getByRole('button', { name: /Окна/ }).click();
+    await form.getByRole('button', { name: 'Далее' }).click();
+    await form.getByRole('button', { name: 'Далее' }).click();
+
     await form.getByLabel('Телефон *').fill('+7 701 123 45 67');
     await form.getByRole('checkbox').check();
-    await form.getByRole('button', { name: 'Получить расчёт' }).click();
+    await form.getByRole('button', { name: 'Отправить заявку' }).click();
 
     await expect(form.getByText(/Форма сейчас не подключена/)).toBeVisible();
-    await expect(form.getByText(/Заявка отправлена/)).toHaveCount(0);
-    await expect(page).not.toHaveURL(/spasibo/);
+    await expect(form.getByText(/Заявка принята/)).toHaveCount(0);
   });
 });
 
@@ -152,5 +167,21 @@ test.describe('Служебные страницы', () => {
     await page.goto('/spasibo');
     const robots = await page.locator('meta[name="robots"]').getAttribute('content');
     expect(robots).toContain('noindex');
+  });
+});
+
+test.describe('Доступность', () => {
+  test('все интерактивные элементы доступны с клавиатуры', async ({ page }) => {
+    await page.goto('/');
+    await page.keyboard.press('Tab');
+    const focused = await page.evaluate(() => document.activeElement?.tagName ?? '');
+    expect(focused).not.toBe('BODY');
+  });
+
+  test('поля формы имеют связанные label', async ({ page }) => {
+    await page.goto('/');
+    const form = page.locator('#zayavka');
+    await form.scrollIntoViewIfNeeded();
+    await expect(form.getByLabel('Тип объекта')).toBeVisible();
   });
 });

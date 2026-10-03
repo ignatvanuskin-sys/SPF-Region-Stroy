@@ -19,3 +19,6 @@ Thumbs.db
 *.log
 lh-*.json
 og-check.png
+
+.vercel
+.env*

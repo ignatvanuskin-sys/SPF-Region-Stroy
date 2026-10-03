@@ -17,6 +17,7 @@ import { cn } from '@/lib/utils';
 import { waLink } from '@/lib/whatsapp';
 import { track } from '@/lib/analytics';
 import { utmForLead } from '@/lib/utm';
+import { consumeLeadIntent } from '@/lib/lead-intent';
 import { availableSlots, groupSlotsByDay, type Slot } from '@/lib/pipeline/schedule';
 import {
   ACCEPTED_IMAGE_TYPES,
@@ -91,7 +92,13 @@ export function LeadForm({
   const days = useMemo(() => groupSlotsByDay(slots), [slots]);
   const currentDay = days[Math.min(dayIndex, Math.max(0, days.length - 1))];
 
-  /* Выбор категории из hero подставляет значение и открывает форму. */
+  /* Выбор категории из hero подставляет значение и открывает форму.
+     Сначала забираем выбор, сделанный до монтирования формы. */
+  useEffect(() => {
+    const saved = consumeLeadIntent();
+    if (saved) setCategory(saved);
+  }, []);
+
   useEffect(() => {
     const onCategory = (event: Event) => {
       const detail = (event as CustomEvent<{ category: string }>).detail;

@@ -96,15 +96,15 @@ export default function HomePage() {
         </div>
       </Section>
 
-      {/* Выбор категории */}
+      {/* Что ускорит расчёт. Второй выбор категории здесь не нужен:
+          он уже есть в hero, а дубль заголовка ломает структуру страницы. */}
       <Section
         id="vybor"
         alt
-        title="Что вам нужно?"
-        lead="Три направления. Выберите своё — форма подставит категорию сама."
+        title="Что ускорит расчёт"
+        lead="Чем точнее вводные, тем быстрее менеджер подготовит предложение."
       >
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start">
-          <CategoryPicker />
           <div className="rounded-lg border border-border bg-background p-5">
             <h3 className="text-[17px]">Что ускорит расчёт</h3>
             <ul className="mt-3 space-y-2 text-[15px] text-muted-foreground">
@@ -116,6 +116,21 @@ export default function HomePage() {
             <p className="mt-4 text-[13px] text-muted-foreground">
               <MarkerText text={NOTES.managerPhotoEstimate} />
             </p>
+          </div>
+
+          <div className="rounded-lg border border-border bg-muted/40 p-5">
+            <h3 className="text-[17px]">Уже знаете, что нужно?</h3>
+            <p className="mt-2 text-[15px] text-muted-foreground">
+              Выберите направление в первом блоке — заявка откроется с нужной категорией.
+            </p>
+            <div className="mt-4">
+              <Button asChild variant="outline" size="sm">
+                <Link href="#form" scroll>
+                  Перейти к заявке
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
       </Section>

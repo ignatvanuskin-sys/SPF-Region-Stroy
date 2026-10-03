@@ -4,6 +4,7 @@ import { ArrowRight } from 'lucide-react';
 
 import { CATEGORIES } from '@/lib/validation';
 import { track } from '@/lib/analytics';
+import { setLeadIntent } from '@/lib/lead-intent';
 
 /**
  * Первый шаг воронки: клиент приходит из 2ГИС и выбирает одно из трёх.
@@ -13,6 +14,8 @@ import { track } from '@/lib/analytics';
 export function CategoryPicker({ compact = false }: { compact?: boolean }) {
   const select = (value: string, label: string) => {
     track('scenario_select', { scenario: value });
+    // Сохраняем выбор до того, как форма появится в DOM.
+    setLeadIntent(value);
     window.dispatchEvent(
       new CustomEvent('spf:category', { detail: { category: value, label } }),
     );
