@@ -1,0 +1,13 @@
+# Нормализация переводов строк: в репозитории всегда LF,
+# иначе сборка на Linux (Vercel/Netlify) видит лишние изменения.
+* text=auto eol=lf
+
+# Бинарные файлы не трогаем
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.avif binary
+*.ico binary
+*.woff2 binary
+*.pdf binary
