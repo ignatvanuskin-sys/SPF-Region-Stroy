@@ -1,318 +1,235 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-/* ═══════════════════════════════════════════════════════════════
-   СПФ Регион Строй — визуальная система
-   Направление: современный архитектурный бренд.
-   Тёплый светлый фон, графитовый текст, стальной акцент, бронза — деталь.
-   Токены в контракте shadcn/ui. Проверка: npm run verify:tokens
-   ═══════════════════════════════════════════════════════════════ */
+/* ============================================================================
+   СПФ Регион Строй — design system
+   Concept: «Свет и геометрия» (light & geometry). Window = a frame that lets
+   light in: thin profile lines, frame grid, clear right angles, lots of air.
+   Principles kept from the master prompt §7; the one bright CTA colour and the
+   cool "glass" accent were validated against the ui-ux-pro-max design-system
+   generator (Trust & Authority + Conversion, accent #EA580C darkened to
+   #C2410C so white button text passes WCAG AA 4.5:1).
+   ========================================================================= */
+
+@theme {
+  /* Surfaces — warm off-white, never pure white as page background */
+  --color-bg: #faf8f5;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f4f1ec;
+  --color-line: #e7e1d8;
+  --color-line-strong: #d5cdc0;
+
+  /* Text — deep graphite */
+  --color-ink: #14181c;
+  --color-ink-soft: #3d454c;
+  --color-ink-muted: #6b7178;
+
+  /* Accent «стекло» — cool blue-teal: links, icons, line motifs. 5.6:1 on bg */
+  --color-glass: #0f6e7e;
+  --color-glass-deep: #0b4f5c;
+  --color-glass-soft: #e6f1f3;
+
+  /* The single warm CTA colour — buttons only. #C2410C = 5.2:1 with white */
+  --color-cta: #c2410c;
+  --color-cta-hover: #9a3412;
+  --color-cta-soft: #fdf1e9;
+  --color-cta-ink: #ffffff;
+
+  /* Dark sections — accent, not a separate theme */
+  --color-dark: #14181c;
+  --color-dark-soft: #1e2429;
+  --color-dark-line: #2e363d;
+  --color-on-dark: #f2efe9;
+  --color-on-dark-muted: #a8b0b7;
+
+  /* Semantic */
+  --color-success: #1a7f4b;
+  --color-warning: #b45309;
+  --color-danger: #b3261e;
+  --color-danger-soft: #fdecea;
+
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', Roboto, Arial, sans-serif;
+
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 26px;
+
+  --shadow-card: 0 1px 2px rgb(20 24 28 / 0.04), 0 8px 24px -12px rgb(20 24 28 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(20 24 28 / 0.05), 0 18px 40px -18px rgb(20 24 28 / 0.22);
+
+  --ease-out-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* ---------------------------------------------------------------- base ---- */
+
 @layer base {
-  :root {
-    /* Тёплый светлый фон и графитовый текст */
-    --background: 48 24% 96%; /* #F7F6F2 */
-    --foreground: 210 9% 9%; /* #151719 */
-
-    --card: 0 0% 100%;
-    --card-foreground: 210 9% 9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 210 9% 9%;
-
-    /* Стальной сине-серый акцент — основной цвет бренда */
-    --primary: 200 21% 41%; /* #526F7D */
-    --primary-foreground: 0 0% 100%;
-
-    /* Светлая поверхность блоков */
-    --secondary: 197 19% 93%; /* #E9EEF0 */
-    --secondary-foreground: 200 21% 26%;
-
-    --muted: 45 20% 92%; /* #EFEDE7 */
-    --muted-foreground: 202 5% 40%; /* #60676B */
-
-    /* Бронза: только линии, рамки и детали малой площади.
-       На тёплом фоне даёт 2.9:1 — для обычного текста не годится. */
-    --accent: 33 36% 52%; /* #B18A5A */
-    --accent-foreground: 210 9% 9%;
-
-    --destructive: 6 63% 46%;
-    --destructive-foreground: 0 0% 100%;
-
-    /* Тонкие тёплые рамки */
-    --border: 44 17% 88%; /* #E5E2DA */
-    --input: 44 17% 88%;
-    --ring: 200 21% 41%;
-
-    /* Вне палитры бренда: узнаваемый зелёный WhatsApp */
-    --wa: 156 78% 27%;
-    --wa-foreground: 0 0% 100%;
-
-    --success: 155 90% 24%;
-    --success-foreground: 0 0% 100%;
-
-    /* Маркеры достоверности (режим concept) */
-    --marker: 47 100% 90%;
-    --marker-foreground: 44 100% 18%;
-
-    --radius: 0.375rem;
-  }
-
   * {
-    @apply border-border;
+    border-color: var(--color-line);
   }
 
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 96px;
     -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5rem; /* sticky header compensation */
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
-    font-size: 17px;
-    line-height: 1.6;
-    overflow-x: hidden;
+    background-color: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1rem; /* never below 16px: stops iOS input zoom */
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    touch-action: manipulation; /* removes the 300ms tap delay */
   }
 
-  /* Крупная типографика, спокойные пропорции */
   h1,
   h2,
   h3,
   h4 {
-    @apply font-display;
-    font-weight: 600;
     letter-spacing: -0.022em;
+    line-height: 1.15;
     text-wrap: balance;
-  }
-
-  h1 {
-    font-size: clamp(31px, 4.8vw, 54px);
-    line-height: 1.02;
-    letter-spacing: -0.03em;
-  }
-
-  h2 {
-    font-size: clamp(24px, 3.6vw, 42px);
-    line-height: 1.08;
-    letter-spacing: -0.026em;
-  }
-
-  h3 {
-    font-size: clamp(18px, 2vw, 22px);
-    line-height: 1.25;
+    font-weight: 700;
   }
 
   p {
     text-wrap: pretty;
   }
 
-  ::selection {
-    background: hsl(var(--accent) / 0.28);
+  /* Visible focus for keyboard users only — pointer users keep clean UI */
+  :focus-visible {
+    outline: 2px solid var(--color-glass);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
+  ::selection {
+    background: var(--color-glass-soft);
+    color: var(--color-glass-deep);
+  }
 
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.001ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.001ms !important;
-      scroll-behavior: auto !important;
-    }
+  /* Forms: 16px prevents iOS auto-zoom, and inputs never collapse below tap size */
+  input,
+  select,
+  textarea,
+  button {
+    font: inherit;
+    color: inherit;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 1rem;
+  }
+
+  img,
+  svg,
+  video {
+    max-width: 100%;
+    height: auto;
   }
 }
 
-@layer components {
-  /* ── Контейнеры: широкая и узкая колонка для асимметрии ───── */
-  .shell {
-    width: 100%;
-    max-width: 1240px;
-    margin-inline: auto;
-    padding-inline: 20px;
-  }
+/* ------------------------------------------------------------ utilities --- */
 
-  .shell-narrow {
+@layer utilities {
+  /* Page gutter — one source of truth for horizontal rhythm */
+  .container-page {
     width: 100%;
-    max-width: 860px;
+    max-width: 76rem;
     margin-inline: auto;
-    padding-inline: 20px;
+    padding-inline: 1.25rem;
   }
 
   @media (min-width: 768px) {
-    .shell,
-    .shell-narrow {
-      padding-inline: 40px;
+    .container-page {
+      padding-inline: 2rem;
     }
   }
 
-  /* ── Тонкие линии, напоминающие оконные рамы и импосты ────── */
-  .mullion {
-    background-image: linear-gradient(
+  /* Mobile sticky action bar reserve: keeps content and forms clear of it */
+  .pb-mobile-bar {
+    padding-bottom: calc(4.75rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  @media (min-width: 1024px) {
+    .pb-mobile-bar {
+      padding-bottom: 0;
+    }
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* Thin profile line motif — the visual signature of the brand */
+  .rule-glass {
+    height: 1px;
+    background: linear-gradient(
       to right,
-      hsl(var(--border)) 1px,
-      transparent 1px
+      transparent,
+      var(--color-line-strong) 12%,
+      var(--color-line-strong) 88%,
+      transparent
     );
-    background-size: 25% 100%;
   }
 
-  .mullion-vertical {
+  /* Frame grid: the "window mullion" pattern used behind hero and dark blocks */
+  .frame-grid {
     background-image: linear-gradient(
-      to bottom,
-      hsl(var(--border)) 1px,
-      transparent 1px
-    );
-    background-size: 100% 88px;
+        to right,
+        color-mix(in oklab, var(--color-glass) 12%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in oklab, var(--color-glass) 12%, transparent) 1px,
+        transparent 1px
+      );
+    background-size: 56px 56px;
   }
 
-  /* Бронзовая линия-акцент: «металл» без градиентов */
-  .rule-bronze {
-    height: 1px;
-    background: hsl(var(--accent));
-    opacity: 0.55;
-  }
-
-  /* ── Надзаголовок: ремесленная метка мелким капсом ─────────── */
-  .eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    font-family: var(--font-sans);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: hsl(var(--muted-foreground));
-  }
-
-  .eyebrow::before {
-    content: '';
-    width: 28px;
-    height: 1px;
-    background: hsl(var(--accent));
-  }
-
-  /* ── Появление секций: CSS view-timeline, без JavaScript ──── */
+  /* Scroll-reveal: opt-in, cheap (CSS only), disabled for reduced motion */
   .reveal {
-    opacity: 1;
-    transform: none;
-  }
-
-  @supports (animation-timeline: view()) {
-    .reveal {
-      animation: reveal-in linear both;
-      animation-timeline: view();
-      animation-range: entry 4% cover 24%;
-    }
+    opacity: 0;
+    transform: translateY(14px);
+    animation: reveal-in 0.55s var(--ease-out-soft) forwards;
   }
 
   @keyframes reveal-in {
-    from {
-      opacity: 0;
-      transform: translateY(14px);
-    }
     to {
       opacity: 1;
       transform: none;
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .reveal {
-      opacity: 1 !important;
-      transform: none !important;
-      animation: none !important;
-    }
-  }
-
-  /* ── Маркеры достоверности (только concept) ───────────────── */
-  .marker {
-    display: inline-block;
-    /* Чип не должен выталкивать колонку шире вьюпорта: длинный маркер
-       переносится, а не растягивает строку. */
-    max-width: 100%;
-    background: hsl(var(--marker));
-    color: hsl(var(--marker-foreground));
-    font-family: ui-monospace, SFMono-Regular, monospace;
-    font-size: 0.84em;
-    line-height: 1.4;
-    padding: 1px 6px;
-    border-radius: 3px;
-    margin: 0 1px;
-    white-space: normal;
+  /* Text that must not clip: long URLs, phone numbers, IDs */
+  .break-anywhere {
     overflow-wrap: anywhere;
-  }
-
-  /* ── Фиксированная мобильная панель ───────────────────────── */
-  .action-bar {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 40;
-    display: flex;
-    gap: 8px;
-    padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
-    background: hsl(var(--background) / 0.94);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid hsl(var(--border));
-    transition: transform 200ms ease;
-  }
-
-  .action-bar[data-hidden='true'] {
-    transform: translateY(120%);
-    pointer-events: none;
-  }
-
-  @media (min-width: 1024px) {
-    .action-bar {
-      display: none;
-    }
-  }
-
-  body:has(.action-bar) .site-footer {
-    padding-bottom: 92px;
-  }
-
-  @media (min-width: 1024px) {
-    body:has(.action-bar) .site-footer {
-      padding-bottom: 0;
-    }
-  }
-
-  /* ── Числа ────────────────────────────────────────────────── */
-  .tnum {
-    font-variant-numeric: tabular-nums;
-  }
-
-  /* ── Прокрутка внутри блока (таблицы, шкалы дат) ──────────── */
-  .scroll-x {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    overscroll-behavior-x: contain;
-  }
-
-  .scroll-x::-webkit-scrollbar {
-    height: 6px;
-  }
-
-  .scroll-x::-webkit-scrollbar-thumb {
-    background: hsl(var(--border));
-    border-radius: 999px;
   }
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 
-  .text-pretty {
-    text-wrap: pretty;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
   }
 }

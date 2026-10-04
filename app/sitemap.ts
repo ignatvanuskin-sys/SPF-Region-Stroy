@@ -1,31 +1,38 @@
 import type { MetadataRoute } from 'next';
+import { SERVICES } from '@/content/services';
 
-import { SITE_URL, IS_CONCEPT, PORTFOLIO_ENABLED } from '@/content/site';
-import { SERVICE_PAGES } from '@/content/services';
-import { portfolioVisible } from '@/content/cases';
-
-export const dynamic = 'force-static';
+const SITE_URL = (process.env.SITE_URL || 'http://localhost:3000').replace(/\/+$/, '');
 
 /**
- * В concept sitemap не отдаётся (раздел 2): возвращаем пустой список,
- * robots.txt при этом закрывает сайт целиком.
+ * Карта сайта. Админка, страница статуса заказа и спасибо-страницы в карту не
+ * попадают: они не для поисковика.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  if (IS_CONCEPT) return [];
-
   const now = new Date();
-  const staticRoutes = ['/', '/kontakty', '/privacy'];
 
-  const routes = [
-    ...staticRoutes,
-    ...SERVICE_PAGES.map((p) => p.slug),
-    ...(portfolioVisible(false, PORTFOLIO_ENABLED) ? ['/portfolio'] : []),
+  const staticPages: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'] }[] = [
+    { path: '/', priority: 1, changeFrequency: 'weekly' },
+    { path: '/raschet', priority: 0.9, changeFrequency: 'monthly' },
+    { path: '/zamer', priority: 0.9, changeFrequency: 'monthly' },
+    { path: '/raboty', priority: 0.8, changeFrequency: 'weekly' },
+    { path: '/otzyvy', priority: 0.7, changeFrequency: 'weekly' },
+    { path: '/o-kompanii', priority: 0.6, changeFrequency: 'monthly' },
+    { path: '/dlya-biznesa', priority: 0.7, changeFrequency: 'monthly' },
+    { path: '/kontakty', priority: 0.7, changeFrequency: 'monthly' },
+    { path: '/faq', priority: 0.6, changeFrequency: 'monthly' },
+    { path: '/politika', priority: 0.2, changeFrequency: 'yearly' },
   ];
 
-  return routes.map((route) => ({
-    url: `${SITE_URL}${route === '/' ? '' : route}`,
+  const servicePages = SERVICES.map((service) => ({
+    path: `/${service.slug}`,
+    priority: 0.8,
+    changeFrequency: 'monthly' as const,
+  }));
+
+  return [...staticPages, ...servicePages].map((page) => ({
+    url: `${SITE_URL}${page.path}`,
     lastModified: now,
-    changeFrequency: route === '/' ? ('weekly' as const) : ('monthly' as const),
-    priority: route === '/' ? 1 : 0.7,
+    changeFrequency: page.changeFrequency,
+    priority: page.priority,
   }));
 }

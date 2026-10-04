@@ -1,52 +1,59 @@
 /**
- * lib/rate-limit.ts — антиспам (раздел 11.4): не более 5 заявок за 10 минут на IP.
+ * Простой ограничитель частоты (§8.1, шаг 2; §12).
  *
- * Хранилище в памяти процесса. На Vercel/Netlify каждая инстанция имеет свою
- * память, поэтому лимит — «мягкий»: он защищает от простого перебора, но не
- * является распределённым. Замена на Redis — точка расширения.
+ * Хранилище — в памяти процесса. Этого достаточно одному инстансу. Если сайт
+ * будет развёрнут в несколько реплик, счётчики нужно вынести в общий store
+ * (Redis/Postgres) — см. docs/RISKS.md.
  */
 
-const WINDOW_MS = 10 * 60 * 1000;
-const MAX_REQUESTS = 5;
-const MAX_TRACKED_IPS = 5000;
-
-const hits = new Map<string, number[]>();
-
-export interface RateLimitResult {
-  allowed: boolean;
-  remaining: number;
-  retryAfterSeconds: number;
+interface Bucket {
+  hits: number[];
 }
 
-export function checkRateLimit(ip: string, now: number = Date.now()): RateLimitResult {
-  const key = ip || 'unknown';
-  const fresh = (hits.get(key) ?? []).filter((t) => now - t < WINDOW_MS);
+const buckets = new Map<string, Bucket>();
+let lastSweep = Date.now();
 
-  if (fresh.length >= MAX_REQUESTS) {
-    hits.set(key, fresh);
-    const oldest = fresh[0];
+function sweep(windowMs: number, now: number): void {
+  // Чистим не чаще раза в минуту, чтобы не тратить время на каждой заявке.
+  if (now - lastSweep < 60_000) return;
+  lastSweep = now;
+  for (const [key, bucket] of buckets) {
+    bucket.hits = bucket.hits.filter((time) => now - time < windowMs);
+    if (bucket.hits.length === 0) buckets.delete(key);
+  }
+}
+
+export interface RateLimitResult {
+  ok: boolean;
+  remaining: number;
+  /** Через сколько секунд можно повторить. */
+  retryAfterSec: number;
+}
+
+export function rateLimit(key: string, limit: number, windowMs: number): RateLimitResult {
+  const now = Date.now();
+  sweep(windowMs, now);
+
+  const bucket = buckets.get(key) ?? { hits: [] };
+  bucket.hits = bucket.hits.filter((time) => now - time < windowMs);
+
+  if (bucket.hits.length >= limit) {
+    const oldest = bucket.hits[0];
+    buckets.set(key, bucket);
     return {
-      allowed: false,
+      ok: false,
       remaining: 0,
-      retryAfterSeconds: Math.max(1, Math.ceil((WINDOW_MS - (now - oldest)) / 1000)),
+      retryAfterSec: Math.max(1, Math.ceil((windowMs - (now - oldest)) / 1000)),
     };
   }
 
-  fresh.push(now);
-  hits.set(key, fresh);
-
-  if (hits.size > MAX_TRACKED_IPS) {
-    // Простейшая уборка: удаляем устаревшие записи.
-    for (const [k, v] of hits) {
-      if (v.every((t) => now - t >= WINDOW_MS)) hits.delete(k);
-      if (hits.size <= MAX_TRACKED_IPS) break;
-    }
-  }
-
-  return { allowed: true, remaining: MAX_REQUESTS - fresh.length, retryAfterSeconds: 0 };
+  bucket.hits.push(now);
+  buckets.set(key, bucket);
+  return { ok: true, remaining: limit - bucket.hits.length, retryAfterSec: 0 };
 }
 
-/** Только для тестов. */
-export function resetRateLimit(): void {
-  hits.clear();
+/** Для тестов: сбросить состояние между кейсами. */
+export function resetRateLimits(): void {
+  buckets.clear();
+  lastSweep = Date.now();
 }

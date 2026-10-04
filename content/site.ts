@@ -1,46 +1,185 @@
 /**
- * content/site.ts — режим сборки и флаги.
+ * Подтверждённые данные компании (карточка 2ГИС, проверено 04.10.2026).
  *
- * SITE_MODE=concept    — демо для показа владельцу (по умолчанию):
- *                        баннер сверху, noindex, форма в тестовый чат,
- *                        маркеры видны как жёлтые чипы.
- * SITE_MODE=production — боевой сайт: индексация включена, сборка падает,
- *                        пока остался хотя бы один маркер.
+ * Здесь только факты из §2 мастер-промпта. Всё, чего тут нет, живёт в реестре
+ * утверждений (content/claims.ts) и не попадает на публичные страницы, пока
+ * владелец не ответит.
+ *
+ * Значения можно переопределить через переменные окружения и/или настройки в
+ * админке — это делает `getSiteConfig()` в lib/domain/settings.ts.
  */
 
-export type SiteMode = 'concept' | 'production';
+export const COMPANY = {
+  name: 'СПФ Регион Строй',
+  legalName: 'ТОО «СПФ Регион Строй»',
+  slogan: 'Фасадные витражи, окна, двери из металлопластика и алюминия!',
+  city: 'Астана',
+  address: 'проспект Республики, 56/2а, Сарыарка район, Астана',
+  addressShort: 'пр. Республики, 56/2а',
+  district: 'Сарыарка район',
+  lat: 51.183311,
+  lng: 71.427298,
+  phonePrimary: '+77018936787',
+  /** Второй номер из карточки 2ГИС. Какой основной — уточняется у владельца. */
+  phoneSecondary: '+77011776090',
+  email: 'plastmontag_2010@mail.ru',
+  instagram: 'https://instagram.com/spf01002',
+  gisFirm: 'https://2gis.kz/astana/firm/70000001042561575',
+  gisReviews: 'https://2gis.kz/astana/firm/70000001042561575/tab/reviews',
+  /** Транспорт и парковка — из карточки 2ГИС. */
+  transit: {
+    stopName: 'Астана технопарк',
+    stopDistance: '500 м (около 5 минут пешком)',
+    parking: '6 парковочных мест',
+  },
+  /** Стартовые значения рейтинга; обновляются вручную в админке. */
+  rating: {
+    value: 4.9,
+    ratingsCount: 46,
+    reviewsCount: 43,
+    photosCount: 26,
+    checkedAt: '2026-10-04',
+  },
+} as const;
 
-function readMode(): SiteMode {
-  return process.env.SITE_MODE === 'production' ? 'production' : 'concept';
-}
+export const NAV = [
+  { href: '/okna-pvh', label: 'Окна ПВХ' },
+  { href: '/aluminievye-okna', label: 'Алюминиевые окна' },
+  { href: '/vitrazhi-fasady', label: 'Витражи и фасады' },
+  { href: '/vhodnye-dveri', label: 'Входные двери' },
+  { href: '/peregorodki', label: 'Перегородки' },
+  { href: '/balkony', label: 'Балконы' },
+] as const;
 
-export const SITE_MODE: SiteMode = readMode();
-export const IS_CONCEPT = SITE_MODE === 'concept';
-
-export const SITE_URL =
-  process.env.SITE_URL?.replace(/\/$/, '') || 'https://spf-region-stroy.kz';
-
-/** Флаги включаются только явным «true». */
-export const KK_ENABLED = process.env.KK_ENABLED === 'true';
-export const PORTFOLIO_ENABLED = process.env.PORTFOLIO_ENABLED === 'true';
-
-export const LEAD_TARGET: 'test' | 'prod' =
-  process.env.LEAD_TARGET === 'prod' ? 'prod' : 'test';
-
-export const GA_ID = process.env.NEXT_PUBLIC_GA_ID || '';
-export const YM_ID = process.env.NEXT_PUBLIC_YM_ID || '';
-
-export const COMPANY_NAME = 'СПФ Регион Строй';
-export const COMPANY_NAME_FULL = 'ТОО «СПФ Регион Строй»';
-
-export const NAV_ITEMS = [
-  { href: '/#uslugi', label: 'Услуги' },
-  { href: '/#process', label: 'Как работаем' },
-  { href: '/#reviews', label: 'Отзывы 2ГИС' },
-  { href: '/#faq', label: 'Вопросы' },
+export const NAV_SECONDARY = [
+  { href: '/raboty', label: 'Наши работы' },
+  { href: '/otzyvy', label: 'Отзывы' },
+  { href: '/o-kompanii', label: 'О компании' },
+  { href: '/dlya-biznesa', label: 'Для организаций' },
+  { href: '/faq', label: 'Вопросы и ответы' },
   { href: '/kontakty', label: 'Контакты' },
 ] as const;
 
-/** Концепт-баннер (только concept). */
-export const CONCEPT_BANNER_TEXT =
-  'Концепт сайта для СПФ Регион Строй. Не является официальным сайтом компании';
+/** Типы конструкций — используются в формах, калькуляторе и атрибуции лидов. */
+export const PRODUCT_TYPES = [
+  { value: 'okno-pvh', label: 'Окно ПВХ (металлопластик)' },
+  { value: 'okno-alyum', label: 'Алюминиевое окно со стеклопакетом' },
+  { value: 'vitrazh', label: 'Витраж / фасадное остекление' },
+  { value: 'dver', label: 'Входная дверь' },
+  { value: 'peregorodka', label: 'Алюминиевая перегородка' },
+  { value: 'balkon', label: 'Остекление балкона / лоджии' },
+  { value: 'remont', label: 'Ремонт окон' },
+  { value: 'other', label: 'Другое / ещё не определился' },
+] as const;
+
+export type ProductTypeValue = (typeof PRODUCT_TYPES)[number]['value'];
+
+export const PRODUCT_TYPE_LABELS: Record<string, string> = Object.fromEntries(
+  PRODUCT_TYPES.map((type) => [type.value, type.label]),
+);
+
+/** Пять шагов работы. Сроки на шагах не указываем — они не подтверждены. */
+export const PROCESS_STEPS = [
+  {
+    step: '01',
+    title: 'Заявка',
+    text: 'Оставляете заявку на сайте, пишете в WhatsApp или звоните. Отвечаем и уточняем, что нужно.',
+  },
+  {
+    step: '02',
+    title: 'Замер и консультация',
+    text: 'Приезжаем на объект, снимаем размеры и помогаем выбрать подходящий вариант конструкции.',
+  },
+  {
+    step: '03',
+    title: 'Расчёт и договор',
+    text: 'Считаем стоимость по вашим размерам, согласовываем комплектацию и оформляем заказ.',
+  },
+  {
+    step: '04',
+    title: 'Изготовление',
+    text: 'Конструкции изготавливаются по снятым размерам на производстве.',
+  },
+  {
+    step: '05',
+    title: 'Доставка и монтаж',
+    text: 'Привозим, устанавливаем и убираем за собой. Показываем, как ухаживать за конструкцией.',
+  },
+] as const;
+
+/**
+ * Районы Астаны для форм. Справочник, а не подтверждение выезда:
+ * `measure_area` пока не подтверждено, поэтому на сайте рядом стоит
+ * нейтральная формулировка «уточним условия».
+ */
+export const ASTANA_DISTRICTS = [
+  'Алматы район',
+  'Байконур район',
+  'Есиль район',
+  'Нура район',
+  'Сарыарка район',
+  'За городом / пригород',
+  'Уточню позже',
+] as const;
+
+/** Строка доверия под hero. Только подтверждённые пункты. */
+export const TRUST_POINTS = [
+  {
+    title: 'Производство, розница и опт',
+    text: 'Указано в карточке компании: работаем и с частными клиентами, и с организациями.',
+    claimKey: 'production',
+  },
+  {
+    title: 'Металлопластик и алюминий',
+    text: 'Окна, входные двери, витражи и перегородки — из обоих материалов.',
+    claimKey: null,
+  },
+  {
+    title: 'Доставка',
+    text: 'Привозим конструкции на объект.',
+    claimKey: 'delivery',
+  },
+  {
+    title: 'Наличные и оплата через банк',
+    text: 'Два способа оплаты, оба указаны в карточке 2ГИС.',
+    claimKey: 'payment',
+  },
+  {
+    title: 'Высокий рейтинг в 2ГИС',
+    text: 'Клиенты отмечают аккуратный монтаж, соблюдение сроков и связь на всех этапах.',
+    claimKey: 'rating_2gis',
+  },
+  {
+    title: 'Замер на объекте',
+    text: 'Мастер приезжает, снимает размеры и помогает с выбором модели.',
+    claimKey: 'measure_area',
+  },
+] as const;
+
+/** Что клиенты отмечают в отзывах 2ГИС — обобщение своими словами, не цитаты (§2.1). */
+export const REVIEW_THEMES = [
+  {
+    title: 'Сроки и пунктуальность',
+    text: 'В отзывах чаще всего пишут, что работы сдали в срок, а иногда и раньше. В одном отзыве путь от замера до установки кухонного окна занял 3 дня.',
+  },
+  {
+    title: 'Аккуратный монтаж',
+    text: 'Клиенты отмечают, что мастера работают чисто, убирают за собой и объясняют, что делают.',
+  },
+  {
+    title: 'Помощь с выбором',
+    text: 'Отдельно благодарят за то, что мастер помог подобрать модель и приехал на замер, а не просто прислал прайс.',
+  },
+  {
+    title: 'На связи на всех этапах',
+    text: 'Быстрый ответ в WhatsApp называют важным: вопросы решаются без ожидания.',
+  },
+  {
+    title: 'Результат через годы',
+    text: 'В отзывах есть установки 2015 года и старше: пишут, что окна и остекление балкона служат, не продувают, стало теплее и тише.',
+  },
+  {
+    title: 'Что заказывали',
+    text: 'Окна, входные двери, витражи, остекление балкона и ремонт окон — всё это есть в отзывах клиентов.',
+  },
+] as const;

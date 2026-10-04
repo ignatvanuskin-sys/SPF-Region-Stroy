@@ -1,13 +1,15 @@
-# Нормализация переводов строк: в репозитории всегда LF,
-# иначе сборка на Linux (Vercel/Netlify) видит лишние изменения.
+# Единые переводы строк, чтобы diff не ломался между Windows и Linux.
 * text=auto eol=lf
 
-# Бинарные файлы не трогаем
+# Windows-скрипты оставляем с CRLF
+*.ps1 text eol=crlf
+
+# Бинарные файлы
 *.png binary
 *.jpg binary
 *.jpeg binary
 *.webp binary
 *.avif binary
 *.ico binary
+*.woff binary
 *.woff2 binary
-*.pdf binary

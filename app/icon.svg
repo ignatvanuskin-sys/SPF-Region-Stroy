@@ -1,9 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="СПФ Регион Строй">
-  <rect width="64" height="64" rx="12" fill="#FFFFFF"/>
-  <g fill="none" stroke="#1F2328" stroke-width="3.5">
-    <rect x="10" y="10" width="44" height="44" rx="4"/>
-    <path d="M32 10v44" stroke-width="2.5"/>
-    <path d="M10 32h44" stroke-width="2.5"/>
-  </g>
-  <rect x="35" y="35" width="19" height="19" fill="#1F5F7A"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <rect width="32" height="32" rx="6" fill="#14181c"/>
+  <rect x="5" y="5" width="22" height="22" rx="2" fill="none" stroke="#faf8f5" stroke-width="2"/>
+  <line x1="16" y1="5" x2="16" y2="27" stroke="#faf8f5" stroke-width="2"/>
+  <line x1="5" y1="16" x2="27" y2="16" stroke="#faf8f5" stroke-width="2"/>
+  <path d="M16 5 L27 5 L27 16 Z" fill="#0f6e7e"/>
+  <path d="M5 16 L16 16 L16 27 Z" fill="#c2410c"/>
 </svg>

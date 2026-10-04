@@ -1,0 +1,75 @@
+# Регулярные служебные задачи (master prompt §12).
+#
+# Зачем этот файл, если есть vercel.json:
+# на бесплатном тарифе Vercel запланированные задачи запускаются только раз в
+# сутки, а очередь уведомлений и контроль SLA должны прогоняться часто.
+# GitHub Actions умеет запускать задачи каждые 5 минут, поэтому основной прогон
+# живёт здесь, а vercel.json остаётся страховкой.
+#
+# Что задать в настройках репозитория (Settings → Secrets and variables → Actions):
+#   SITE_URL     — публичный адрес сайта, например https://spf-region-stroy.vercel.app
+#   CRON_SECRET  — тот же секрет, что в переменных окружения приложения
+#
+# Без этих секретов workflow завершится с понятной ошибкой, а не молча.
+
+name: Служебные задачи
+
+on:
+  schedule:
+    # Каждые 15 минут: очередь уведомлений, контроль SLA, напоминания о замерах.
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: cron-tick
+  cancel-in-progress: false
+
+jobs:
+  tick:
+    name: Прогон очереди и SLA
+    runs-on: ubuntu-latest
+    steps:
+      - name: Проверить, что секреты заданы
+        env:
+          SITE_URL: ${{ secrets.SITE_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$SITE_URL" ] || [ -z "$CRON_SECRET" ]; then
+            echo "Не заданы SITE_URL или CRON_SECRET в секретах репозитория."
+            exit 1
+          fi
+
+      - name: Вызвать /api/cron/tick
+        env:
+          SITE_URL: ${{ secrets.SITE_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          code=$(curl -sS -o /tmp/tick.json -w '%{http_code}' \
+            -X POST "$SITE_URL/api/cron/tick" \
+            -H "Authorization: Bearer $CRON_SECRET")
+          echo "HTTP $code"
+          cat /tmp/tick.json || true
+          echo
+          # 401 означает несовпадение секретов — это ошибка, а не успех
+          if [ "$code" != "200" ]; then
+            echo "Не удалось выполнить прогон (ожидался 200)."
+            exit 1
+          fi
+
+  digest:
+    name: Утренний дайджест (09:00 Asia/Almaty)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Отправить дайджест, если сейчас 04:00 UTC
+        env:
+          SITE_URL: ${{ secrets.SITE_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          hour_utc=$(date -u +%H)
+          if [ "$hour_utc" != "04" ]; then
+            echo "Сейчас $hour_utc UTC — время дайджеста не наступило, пропускаем."
+            exit 0
+          fi
+          curl -sS -X POST "$SITE_URL/api/cron/digest" \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            -f

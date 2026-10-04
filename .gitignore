@@ -5,20 +5,13 @@ build/
 dist/
 .env
 .env.local
-.env.*.local
-.vercel
+.env*.local
 *.tsbuildinfo
 next-env.d.ts
-test-results/
-playwright-report/
-playwright/.cache/
 .DS_Store
-Thumbs.db
-
-# Рабочие артефакты (локальные логи и замеры Lighthouse)
-*.log
-lh-*.json
-og-check.png
-
-.vercel
-.env*
+/data/
+/storage/
+/var/
+coverage/
+playwright-report/
+test-results/

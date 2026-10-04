@@ -1,60 +1,79 @@
 import * as React from 'react';
-import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
-
 import { cn } from '@/lib/utils';
 
 /**
- * shadcn/ui Button. Варианты вместо inline-условий классов.
- * Минимальная высота 48px — требование touch-таргета (WCAG 2.5.8 / 44×44).
+ * shadcn-подход: варианты через cva, классы прокидываются наружу.
+ *
+ * Доступность: минимальная зона нажатия 44 px по высоте (h-11), видимый фокус
+ * (глобальный :focus-visible), `cursor-pointer` на всех кликабельных элементах.
+ * Один яркий CTA-цвет — только у варианта `cta`, чтобы взгляд всегда находил
+ * главное действие.
  */
 const buttonVariants = cva(
-  [
-    'inline-flex items-center justify-center gap-2 rounded-lg text-base font-semibold cursor-pointer text-center transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background disabled:pointer-events-none disabled:opacity-55 [&_svg]:pointer-events-none [&_svg]:shrink-0',
-    // На мобильных длинная подпись переносится, с sm — в одну строку:
-    // иначе «Получить расчет и вызвать замерщика» шире вьюпорта 360px.
-    'whitespace-normal leading-snug sm:whitespace-nowrap',
-  ],
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius-md)] font-semibold transition-colors duration-150 cursor-pointer disabled:pointer-events-none disabled:opacity-55 [&_svg]:shrink-0',
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
-        wa: 'bg-wa text-wa-foreground hover:bg-wa/90',
-        accent: 'bg-accent text-accent-foreground hover:bg-accent/90',
-        outline: 'border border-input bg-background text-foreground hover:border-primary hover:text-primary',
-        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-        ghost: 'text-primary hover:bg-secondary',
-        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
-        link: 'text-primary underline-offset-4 hover:underline',
+        cta: 'bg-[var(--color-cta)] text-[var(--color-cta-ink)] hover:bg-[var(--color-cta-hover)] shadow-[0_1px_2px_rgb(20_24_28/0.08)]',
+        primary: 'bg-[var(--color-ink)] text-[var(--color-bg)] hover:bg-[var(--color-ink-soft)]',
+        glass: 'bg-[var(--color-glass)] text-white hover:bg-[var(--color-glass-deep)]',
+        outline:
+          'border border-[var(--color-line-strong)] bg-[var(--color-surface)] text-[var(--color-ink)] hover:border-[var(--color-ink)] hover:bg-[var(--color-surface-alt)]',
+        ghost: 'text-[var(--color-ink)] hover:bg-[var(--color-surface-alt)]',
+        link: 'text-[var(--color-glass)] underline-offset-4 hover:underline p-0 h-auto',
+        danger: 'bg-[var(--color-danger)] text-white hover:opacity-90',
       },
       size: {
-        default: 'h-12 px-5 py-3',
-        sm: 'h-11 px-4 text-sm',
-        lg: 'h-14 px-7 text-[17px]',
-        icon: 'h-12 w-12',
+        sm: 'h-10 px-3.5 text-sm',
+        md: 'h-11 px-5 text-[0.95rem]',
+        lg: 'h-13 px-6 text-base',
+        icon: 'h-11 w-11',
       },
+      block: { true: 'w-full', false: '' },
     },
-    defaultVariants: { variant: 'default', size: 'default' },
+    defaultVariants: { variant: 'primary', size: 'md', block: false },
   },
 );
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
-  /** Полиморфная композиция с Radix: <Button asChild><Link/></Button>. */
-  asChild?: boolean;
+  /** Показывает индикатор и блокирует повторную отправку. */
+  loading?: boolean;
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : 'button';
-    // className передаём снаружи cva: внутри cva классы склеиваются через clsx,
-    // который не разрешает конфликты Tailwind. Из-за этого, например,
-    // whitespace-normal не перебивал whitespace-nowrap из базы, и длинная
-    // подпись кнопки растягивала страницу на мобильном.
-    return <Comp className={cn(buttonVariants({ variant, size }), className)} ref={ref} {...props} />;
-  },
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, block, loading, children, disabled, ...props }, ref) => (
+    <button
+      ref={ref}
+      className={cn(buttonVariants({ variant, size, block }), className)}
+      disabled={disabled || loading}
+      aria-busy={loading || undefined}
+      {...props}
+    >
+      {loading ? (
+        <span
+          aria-hidden="true"
+          className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+        />
+      ) : null}
+      {children}
+    </button>
+  ),
 );
 Button.displayName = 'Button';
 
-export { Button, buttonVariants };
+/** Ссылка, выглядящая как кнопка: тот же набор вариантов, но это <a>. */
+export interface ButtonLinkProps
+  extends React.AnchorHTMLAttributes<HTMLAnchorElement>,
+    VariantProps<typeof buttonVariants> {}
+
+export const ButtonLink = React.forwardRef<HTMLAnchorElement, ButtonLinkProps>(
+  ({ className, variant, size, block, ...props }, ref) => (
+    <a ref={ref} className={cn(buttonVariants({ variant, size, block }), className)} {...props} />
+  ),
+);
+ButtonLink.displayName = 'ButtonLink';
+
+export { buttonVariants };
